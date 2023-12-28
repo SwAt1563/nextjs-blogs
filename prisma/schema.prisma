@@ -1,0 +1,134 @@
+
+// Tutorial: https://www.prisma.io/blog/fullstack-nextjs-graphql-prisma-oklidw1rhw
+// https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/using-prisma-migrate-typescript-postgresql
+
+
+// First step make .env file and add the postgres url
+
+// Second step install the dependencies
+// npm install @vercel/postgres
+// npm install --save-dev prisma
+// npx prisma init
+
+// Third step create the schema.prisma file and add the schema
+// Then apply migration and upload to database
+// npx prisma migrate dev --name init
+// note: (init) just a name u can change it, exp: when make update for a category table
+// npx prisma migrate dev --name update-category-table
+
+// Fourth step generate the client
+// npm install @prisma/client
+
+// Fifth step (optional) change package.json and tsconfig.json
+// ts-node: in the tsconfig.json file, specify that ts-node will use CommonJS modules
+// for upload seed.ts data on the database
+// prisma: and Update your package.json file by adding a prisma key with a seed property defining the script for seeding the database
+// "prisma": {
+//     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+//   }
+// then apply this command
+// npm install -D typescript ts-node @types/node
+
+
+// Sixth step make seed
+// npx prisma db seed
+
+// Finally
+// watch your database on the prisma studio
+// npx prisma studio
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  username  String   @unique
+  password  String
+  imageUrl  String?
+  role      Role     @default(USER)
+  blogs     Blog[]
+  comments  Comment[]
+  likes     Like[]
+  views     View[]
+
+}
+
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  blogs       Blog[]
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}
+
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String
+  imageUrl    String?
+  status      Status   @default(DRAFT)
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int
+  comments    Comment[]
+  likes       Like[]
+  views       View[]
+}
+
+model View {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  @@unique([blogId, userId], name: "UniqueBlogUserView")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  @@unique([blogId, userId], name: "UniqueBlogUserLike")
+}
+
