@@ -40,17 +40,31 @@
 
 generator client {
   provider = "prisma-client-js"
+  // https://www.prisma.io/docs/orm/prisma-client/queries/full-text-search
+  previewFeatures = ["fullTextSearch", "fullTextIndex"] // enable full-text search
+
 }
 
+// accelerate for cache
+// https://console.prisma.io/clqnr07nh01r3yl0u3jx6w2hv/overview
+// https://www.prisma.io/docs/accelerate/getting-started
+// get the key and add it to the .env file
+// npm install @prisma/extension-accelerate
+
+//  For long-running application servers like those on AWS EC2
+//  npx prisma generate
+
+// For Serverless or Edge applications
+// npx prisma generate --no-engine
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 enum Role {
-  USER
-  ADMIN
+  USER 
+  ADMIN 
 }
 
 model User {
@@ -97,6 +111,7 @@ model Blog {
   comments    Comment[]
   likes       Like[]
   views       View[]
+  
 }
 
 model View {

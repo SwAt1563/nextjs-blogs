@@ -1,0 +1,58 @@
+enum Status {
+  PUBLISHED
+  DRAFT
+}
+type Blog {
+  id: ID!
+  title: String!
+  description: String!
+  imageUrl: String
+  createdAt: String
+  updatedAt: String
+  status: Status!
+  user: User!
+  category: Category!
+  comments: [Comment!]
+  number_of_likes: Int!
+  number_of_views: Int!
+}
+
+type BlogPagination {
+  blogs: [Blog!]
+  total: Int!
+}
+
+type Query {
+  getBlog(blogId: ID!, userId: ID!): Blog
+  getBlogsByUser(userId: ID!): [Blog!]
+  getBlogs(
+    offset: Int
+    limit: Int
+    categoryName: String
+    status: Status
+  ): BlogPagination
+  getBlogsBySearchQuery(
+    query: String
+    categoryName: String
+    limit: Int
+    offset: Int
+  ): BlogPagination
+}
+
+type Mutation {
+  createBlog(
+    userId: ID!
+    title: String!
+    description: String!
+    imageUrl: String
+    categoryName: String!
+  ): Blog!
+  deleteBlog(blogId: ID!): Blog!
+  updateBlog(
+    blogId: ID!
+    title: String
+    description: String
+    imageUrl: String
+  ): Blog!
+  updateBlogStatus(blogId: ID!): Blog!
+}

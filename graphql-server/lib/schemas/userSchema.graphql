@@ -1,0 +1,37 @@
+enum Role {
+  ADMIN
+  USER
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  password: String!
+  role: Role!
+  imageUrl: String
+  blogs: [Blog!]
+}
+
+type Query {
+  getUser(userId: ID!): User
+}
+
+type AuthResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  user: User
+}
+
+type Mutation {
+  register(
+    username: String!
+    email: String!
+    password: String!
+    imageUrl: String
+  ): AuthResponse!
+  login(email: String!, password: String!): AuthResponse!
+  updateUserImageUrl(userId: ID!, imageUrl: String!): User!
+  resetUserPassword(email: String!, password: String!): User!
+}

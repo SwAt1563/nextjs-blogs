@@ -1,0 +1,12 @@
+type Comment {
+  id: ID!
+  blogId: Int!
+  userId: Int!
+  user: User
+  content: String!
+  createdAt: String
+}
+
+type Mutation {
+  createComment(userId: ID!, blogId: ID!, content: String!): Comment!
+}

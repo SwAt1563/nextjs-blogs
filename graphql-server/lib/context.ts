@@ -26,11 +26,10 @@ export type DataSourceContext = {
 export const createContext = ({
   req,
   res,
-  cache,
 }: {
   req: NextApiRequest;
   res: NextApiResponse<NextApiRequest>;
-  cache: KeyValueCache<string>;
+  
 }): DataSourceContext => {
   return {
     dataSources: {

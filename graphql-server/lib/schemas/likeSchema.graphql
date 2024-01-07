@@ -1,0 +1,10 @@
+type Like {
+  id: ID!
+  blogId: ID!
+  userId: ID!
+}
+
+type Mutation {
+  createLike(userId: ID!, blogId: ID!): Like!
+  deleteLike(userId: ID!, blogId: ID!): Like!
+}

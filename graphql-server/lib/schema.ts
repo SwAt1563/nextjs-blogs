@@ -1,70 +1,30 @@
-import { gql } from "graphql-tag";
+// graphql/schema.ts
+// https://the-guild.dev/graphql/tools/docs/schema-merging
+import { mergeTypeDefs } from "@graphql-tools/merge";
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { join, dirname } from "path"; // Correct import for dirname
+import { fileURLToPath } from "url";
+// import { writeFileSync } from "fs"; // Import writeFileSync
+// import { print } from "graphql"; // Import print function
 
-export const typeDefs = gql`
-  type View {
-    id: ID!
-    blog: Blog!
-    user: User!
-  }
 
-  type Like {
-    id: ID!
-    blog: Blog!
-    user: User!
-  }
+// Get the directory of the current module
+const currentDir = dirname(fileURLToPath(import.meta.url));
 
-  type Comment {
-    id: ID!
-    blog: Blog!
-    user: User!
-    content: String!
-    createdAt: String
-  }
+const typesArray = loadFilesSync(join(currentDir, "schemas"), {
+  extensions: ["graphql"],
+});
 
-  type Category {
-    id: ID!
-    name: String!
-    blogs: [Blog!]
-  }
 
-  enum Role {
-    ADMIN
-    USER
-  }
+const typeDefs = mergeTypeDefs(typesArray);
 
-  type User {
-    id: ID!
-    username: String!
-    email: String!
-    password: String!
-    role: Role!
-    imageUrl: String
-    blogs: [Blog!]
-  }
+// // Specify the path for the output .graphql file
+// const outputPath = join(currentDir, "schema.graphql");
 
-  enum Status {
-    PUBLISHED
-    DRAFT
-  }
-  type Blog {
-    id: ID!
-    title: String!
-    description: String!
-    imageUrl: String
-    updatedAt: String
-    status: Status!
-    user: User!
-    category: Category!
-    comments: [Comment!]
-    likes: [Like!]
-    views: [View!]
-  }
+// // Write the typeDefs to the specified file
+// writeFileSync(outputPath, print(typeDefs)); // for create schema.graphql file
 
-  type Query {
-    tracksForHome: [Track!]!
-  }
 
-  type Mutation {
-    tracksForHome2: [Track!]!
-  }
-`;
+export default typeDefs;
+
+

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import type { CommentModel } from "../models";
 
 export class CommentAPI {
   prisma: PrismaClient;
@@ -7,7 +8,7 @@ export class CommentAPI {
     this.prisma = prisma;
   }
 
-  async createComment(userId: number, blogId: number, content: string) {
+  async createComment(userId: number, blogId: number, content: string) : Promise<CommentModel>  {
     return await this.prisma.comment.create({
       data: {
         content: content,
@@ -25,7 +26,7 @@ export class CommentAPI {
     });
   }
 
-  async getBlogComments(blogId: number) {
+  async getBlogComments(blogId: number): Promise<CommentModel[]> {
     return await this.prisma.comment.findMany({
       where: {
         blogId: blogId,

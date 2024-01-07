@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-
+import type { LikeModel } from "../models";
 export class LikeAPI {
   prisma: PrismaClient;
 
@@ -7,7 +7,7 @@ export class LikeAPI {
     this.prisma = prisma;
   }
 
-  async createLike(userId: number, blogId: number) {
+  async createLike(userId: number, blogId: number): Promise<LikeModel> {
     return await this.prisma.like.create({
       data: {
         user: { connect: { id: userId } },
@@ -16,7 +16,7 @@ export class LikeAPI {
     });
   }
 
-  async deleteLike(userId: number, blogId: number) {
+  async deleteLike(userId: number, blogId: number): Promise<LikeModel> {
     return await this.prisma.like.delete({
       where: {
         UniqueBlogUserLike: {
@@ -27,13 +27,7 @@ export class LikeAPI {
     });
   }
 
-  async getBlogLikesCount(blogId: number) {
-    return await this.prisma.like.count({
-      where: {
-        blogId: blogId,
-      },
-    });
-  }
+ 
 
    
 

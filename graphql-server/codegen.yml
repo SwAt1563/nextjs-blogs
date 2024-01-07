@@ -1,0 +1,24 @@
+# package scripts: "generate-server": "graphql-codegen --config graphql-server/codegen.yml"
+# Run the command when the schema and models are ready:
+# npm run generate-server
+
+overwrite: true
+schema: "./graphql-server/lib/schemas/*.graphql" # start path from root
+documents: null
+generates:
+  ./graphql-server/lib/types.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+
+    config:
+      useIndexSignature: true
+      contextType: "./context#DataSourceContext"
+      mappers:
+        Blog: ./models#BlogModel
+        Category: ./models#CategoryModel
+        Comment: ./models#CommentModel
+        User: ./models#UserModel
+        Like: ./models#LikeModel
+        View: ./models#ViewModel
+

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import type { ViewModel } from "../models";
 
 export class ViewAPI {
   prisma: PrismaClient;
@@ -7,7 +8,7 @@ export class ViewAPI {
     this.prisma = prisma;
   }
 
-  async createView(userId: number, blogId: number) {
+  async createView(userId: number, blogId: number): Promise<ViewModel> {
     return await this.prisma.view.create({
       data: {
         user: {
@@ -24,11 +25,5 @@ export class ViewAPI {
     });
   }
 
-  async getBlogViews(blogId: number) {
-    return await this.prisma.view.count({
-      where: {
-        blogId: blogId,
-      },
-    });
-  }
+  
 }

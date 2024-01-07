@@ -1,0 +1,9 @@
+type View {
+  id: ID!
+  blogId: ID!
+  userId: ID!
+}
+
+type Mutation {
+  createView(userId: ID!, blogId: ID!): View!
+}
