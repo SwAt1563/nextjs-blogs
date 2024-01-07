@@ -1,6 +1,5 @@
-import prisma from "../../prisma/db";
+import prisma from "@/prisma/db";
 
-import { KeyValueCache } from "@apollo/utils.keyvaluecache";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import {

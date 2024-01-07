@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClientAccelerated } from "@/prisma/db";
 import type { CategoryModel } from "../models";
 
 export class CategoryAPI {
-  prisma: PrismaClient;
+  prisma: PrismaClientAccelerated;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClientAccelerated) {
     this.prisma = prisma;
   }
 
@@ -17,8 +17,10 @@ export class CategoryAPI {
   }
 
   async getCategories(): Promise<CategoryModel[]> {
-    return await this.prisma.category.findMany({
-      cacheStrategy: {  ttl: 10 },
-    });
+    return await this.prisma.category.findMany(
+      {
+      cacheStrategy: { swr: 10, ttl: 60 },
+    }
+    );
   }
 }

@@ -1,0 +1,17 @@
+# codegen.yml
+# npm i -D "@graphql-codegen/cli"
+# npm i -D "@graphql-codegen/client-preset"
+
+# package scripts: "generate-client": "graphql-codegen --config graphql-client/codegen.yml"
+# Run the command when the schema and models are ready:
+# npm run generate-client
+
+schema: "./graphql-server/lib/schemas/*.graphql" # start path from root
+documents:
+  - "./app/**/*.tsx"
+generates:
+  "./graphql-client/__generated__/":
+    preset: "client"
+    presetConfig:
+      gqlTagName: "gql"
+# ignoreNoDocuments: true # do that at the beginning before you have any documents

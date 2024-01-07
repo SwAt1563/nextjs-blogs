@@ -1,3 +1,6 @@
+# npm i -D "@graphql-codegen/cli"
+# npm i -D "@graphql-codegen/typescript"
+# npm i -D "@graphql-codegen/typescript-resolvers"
 # package scripts: "generate-server": "graphql-codegen --config graphql-server/codegen.yml"
 # Run the command when the schema and models are ready:
 # npm run generate-server

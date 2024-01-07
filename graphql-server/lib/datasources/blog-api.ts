@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import { Status, BlogModel } from "../models";
+import type { PrismaClientAccelerated } from "@/prisma/db";
 
 export class BlogAPI {
-  prisma: PrismaClient;
+  prisma: PrismaClientAccelerated;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClientAccelerated) {
     this.prisma = prisma;
   }
 

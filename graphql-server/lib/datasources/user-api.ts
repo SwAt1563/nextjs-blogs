@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClientAccelerated } from "@/prisma/db";
 import bcrypt from "bcrypt";
 import type { UserModel } from "../models";
 
 export class UserAPI {
-  prisma: PrismaClient;
+  prisma: PrismaClientAccelerated;
 
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClientAccelerated) {
     this.prisma = prisma;
   }
 
