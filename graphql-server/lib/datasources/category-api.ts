@@ -17,6 +17,8 @@ export class CategoryAPI {
   }
 
   async getCategories(): Promise<CategoryModel[]> {
-    return await this.prisma.category.findMany();
+    return await this.prisma.category.findMany({
+      cacheStrategy: {  ttl: 10 },
+    });
   }
 }

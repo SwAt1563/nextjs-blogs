@@ -54,8 +54,6 @@ generator client {
 //  For long-running application servers like those on AWS EC2
 //  npx prisma generate
 
-// For Serverless or Edge applications
-// npx prisma generate --no-engine
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
