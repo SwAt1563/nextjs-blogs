@@ -37,6 +37,7 @@ export type Blog = {
   title: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['String']['output']>;
   user: User;
+  userMadeLike?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type BlogPagination = {
@@ -79,10 +80,8 @@ export type Mutation = {
   deleteLike: Like;
   login: AuthResponse;
   register: AuthResponse;
-  resetUserPassword: User;
   updateBlog: Blog;
   updateBlogStatus: Blog;
-  updateUserImageUrl: User;
 };
 
 
@@ -131,22 +130,14 @@ export type MutationDeleteLikeArgs = {
 
 
 export type MutationLoginArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
 export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   imageUrl?: InputMaybe<Scalars['String']['input']>;
-  password: Scalars['String']['input'];
   username: Scalars['String']['input'];
-};
-
-
-export type MutationResetUserPasswordArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
 };
 
 
@@ -160,12 +151,6 @@ export type MutationUpdateBlogArgs = {
 
 export type MutationUpdateBlogStatusArgs = {
   blogId: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdateUserImageUrlArgs = {
-  imageUrl: Scalars['String']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 export type Query = {
@@ -226,7 +211,6 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   imageUrl?: Maybe<Scalars['String']['output']>;
-  password: Scalars['String']['output'];
   role: Role;
   username: Scalars['String']['output'];
 };

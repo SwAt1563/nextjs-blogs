@@ -1,10 +1,9 @@
 import { Resolvers } from "../types";
 
-
 export const blogResolvers: Resolvers = {
   Query: {
-    getBlog: async (_, { userId, blogId }, { dataSources }) => {
-      return await dataSources.blogAPI.getBlog(Number(userId), Number(blogId));
+    getBlog: async (_, { blogId, userId }, { dataSources }) => {
+      return await dataSources.blogAPI.getBlog(Number(blogId), Number(userId));
     },
 
     getBlogsByUser: async (_, { userId }, { dataSources }) => {
@@ -71,9 +70,9 @@ export const blogResolvers: Resolvers = {
     ) => {
       return await dataSources.blogAPI.createBlog(
         Number(userId),
+        categoryName,
         title,
         description,
-        categoryName,
         imageUrl ||
           "https://www.hallaminternet.com/wp-content/uploads/2020/01/Is-blogging-relevant-anymore.jpeg"
       );
@@ -100,6 +99,20 @@ export const blogResolvers: Resolvers = {
       );
     },
   },
+
+  Blog: {
+   
+
+    comments: async ({ id }, _, { dataSources }) => {
+      return await dataSources.commentAPI.getBlogComments(Number(id));
+    },
+
+    number_of_views: async ({ _count }, _, __) => {
+      return _count?.views || 0;
+    },
+
+    number_of_likes: async ({ _count }, _, __) => {
+      return _count?.likes || 0;
+    },
+  },
 };
-
-

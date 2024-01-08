@@ -1,10 +1,10 @@
-import type { PrismaClientAccelerated } from "@/prisma/db";
+import type { PrismaClient } from "@prisma/client/scripts/default-index";
 import type { CommentModel } from "../models";
 
 export class CommentAPI {
-  prisma: PrismaClientAccelerated;
+  prisma: PrismaClient;
 
-  constructor(prisma: PrismaClientAccelerated) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 

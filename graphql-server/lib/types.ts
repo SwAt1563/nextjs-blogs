@@ -41,6 +41,7 @@ export type Blog = {
   title: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['String']['output']>;
   user: User;
+  userMadeLike?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type BlogPagination = {
@@ -83,10 +84,8 @@ export type Mutation = {
   deleteLike: Like;
   login: AuthResponse;
   register: AuthResponse;
-  resetUserPassword: User;
   updateBlog: Blog;
   updateBlogStatus: Blog;
-  updateUserImageUrl: User;
 };
 
 
@@ -135,22 +134,14 @@ export type MutationDeleteLikeArgs = {
 
 
 export type MutationLoginArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
 export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   imageUrl?: InputMaybe<Scalars['String']['input']>;
-  password: Scalars['String']['input'];
   username: Scalars['String']['input'];
-};
-
-
-export type MutationResetUserPasswordArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
 };
 
 
@@ -164,12 +155,6 @@ export type MutationUpdateBlogArgs = {
 
 export type MutationUpdateBlogStatusArgs = {
   blogId: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdateUserImageUrlArgs = {
-  imageUrl: Scalars['String']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 export type Query = {
@@ -230,7 +215,6 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   imageUrl?: Maybe<Scalars['String']['output']>;
-  password: Scalars['String']['output'];
   role: Role;
   username: Scalars['String']['output'];
 };
@@ -371,6 +355,7 @@ export type BlogResolvers<ContextType = DataSourceContext, ParentType extends Re
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  userMadeLike?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -411,12 +396,10 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createView?: Resolver<ResolversTypes['View'], ParentType, ContextType, RequireFields<MutationCreateViewArgs, 'blogId' | 'userId'>>;
   deleteBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationDeleteBlogArgs, 'blogId'>>;
   deleteLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, RequireFields<MutationDeleteLikeArgs, 'blogId' | 'userId'>>;
-  login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
-  register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'password' | 'username'>>;
-  resetUserPassword?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationResetUserPasswordArgs, 'email' | 'password'>>;
+  login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'username'>>;
+  register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'username'>>;
   updateBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogArgs, 'blogId'>>;
   updateBlogStatus?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogStatusArgs, 'blogId'>>;
-  updateUserImageUrl?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserImageUrlArgs, 'imageUrl' | 'userId'>>;
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
@@ -433,7 +416,6 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   role?: Resolver<ResolversTypes['Role'], ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

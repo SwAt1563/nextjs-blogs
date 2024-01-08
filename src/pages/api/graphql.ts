@@ -6,9 +6,9 @@ import { ApolloServer } from "@apollo/server";
 import {
   createContext,
   DataSourceContext,
-} from "../../graphql-server/lib/context"; // Import your context creation function
-import typeDefs from "../../graphql-server/lib/schema";
-import resolvers from "../../graphql-server/lib/resolvers";
+} from "@/graphql-server/lib/context"; // Import your context creation function
+import typeDefs from "@/graphql-server/lib/schema";
+import resolvers from "@/graphql-server/lib/resolvers";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
 
 const apolloServer = new ApolloServer<DataSourceContext>({

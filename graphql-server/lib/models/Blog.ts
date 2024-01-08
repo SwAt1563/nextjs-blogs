@@ -13,7 +13,6 @@ export type BlogModel = {
   categoryId: number;
   user?: UserModel;
   category?: CategoryModel;
-  userMadeLike?: boolean;
   _count?: {
     views: number;
     likes: number;

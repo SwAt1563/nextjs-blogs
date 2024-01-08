@@ -1,31 +1,22 @@
-import type { PrismaClientAccelerated } from "@/prisma/db";
-import bcrypt from "bcrypt";
+import type { PrismaClient } from "@prisma/client/scripts/default-index";
 import type { UserModel } from "../models";
 
 export class UserAPI {
-  prisma: PrismaClientAccelerated;
+  prisma: PrismaClient;
 
-  constructor(prisma: PrismaClientAccelerated) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
-  private async hashPassword(password: string): Promise<string> {
-    const saltRounds = 10;
-    return bcrypt.hash(password, saltRounds);
-  }
-
   async createUser(
-    email: string,
     username: string,
-    password: string,
+    email: string,
     imageUrl?: string
   ): Promise<UserModel> {
-    const hashedPassword = await this.hashPassword(password);
 
     const userData = {
       username: username,
       email: email,
-      password: hashedPassword,
       // Conditionally include imageUrl only if provided
       ...(imageUrl && { imageUrl }),
     };
@@ -43,26 +34,14 @@ export class UserAPI {
     });
   }
 
-  async resetPassword(email: string, newPassword: string): Promise<UserModel> {
-    const hashedPassword = await this.hashPassword(newPassword);
-
-    return await this.prisma.user.update({
-      where: {
-        email: email,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    });
-  }
+  
 
   async loginUser(
-    email: string,
-    password: string
+    username: string,
   ): Promise<{ success: boolean; error?: string; user?: UserModel }> {
     const user = await this.prisma.user.findUnique({
       where: {
-        email: email,
+        username: username,
       },
     });
 
@@ -70,23 +49,9 @@ export class UserAPI {
       return { success: false, error: "User not found" };
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password); // FUNCTION USE 10 ROUNDS OF SALT
-
-    if (!passwordMatch) {
-      return { success: false, error: "Incorrect password" };
-    }
 
     return { success: true, user: user };
   }
 
-  async updateImageUrl(userId: number, imageUrl: string): Promise<UserModel> {
-    return await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        imageUrl: imageUrl,
-      },
-    });
-  }
+ 
 }

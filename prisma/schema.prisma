@@ -16,6 +16,9 @@
 // note: (init) just a name u can change it, exp: when make update for a category table
 // npx prisma migrate dev --name update-category-table
 
+// optional : npx prisma db push
+// for direct push without make migration
+
 // Fourth step generate the client
 // npm install @prisma/client
 
@@ -71,7 +74,6 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   username  String   @unique
-  password  String
   imageUrl  String?
   role      Role     @default(USER)
   blogs     Blog[]

@@ -10,7 +10,7 @@ export const userResolvers: Resolvers = {
   Mutation: {
     register: async (
       _,
-      { username, email, password, imageUrl },
+      { username, email, imageUrl },
       { dataSources }
     ) => {
       try {
@@ -21,7 +21,6 @@ export const userResolvers: Resolvers = {
         const user = await dataSources.userAPI.createUser(
           username,
           email,
-          password,
           userImageUrl
         );
         return {
@@ -40,9 +39,9 @@ export const userResolvers: Resolvers = {
       }
     },
 
-    login: async (_, { email, password }, { dataSources }) => {
+    login: async (_, { username }, { dataSources }) => {
       try {
-        const response = await dataSources.userAPI.loginUser(email, password);
+        const response = await dataSources.userAPI.loginUser(username);
 
         if (!response.success) {
           return {
@@ -69,12 +68,11 @@ export const userResolvers: Resolvers = {
       }
     },
 
-    resetUserPassword: async (_, { email, password }, { dataSources }) => {
-      return await dataSources.userAPI.resetPassword(email, password);
-    },
+  },
 
-    updateUserImageUrl: async (_, { userId, imageUrl }, { dataSources }) => {
-      return await dataSources.userAPI.updateImageUrl(Number(userId), imageUrl);
+  User: {
+    blogs: async ({id}, _, { dataSources }) => {
+      return await dataSources.blogAPI.getBlogsByUser(id);
     },
   },
 };

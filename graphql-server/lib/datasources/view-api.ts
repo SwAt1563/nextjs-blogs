@@ -1,10 +1,10 @@
-import type { PrismaClientAccelerated } from "@/prisma/db";
+import type { PrismaClient } from "@prisma/client/scripts/default-index";
 import type { ViewModel } from "../models";
 
 export class ViewAPI {
-  prisma: PrismaClientAccelerated;
+  prisma: PrismaClient;
 
-  constructor(prisma: PrismaClientAccelerated) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 

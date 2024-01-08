@@ -1,9 +1,9 @@
-import type { PrismaClientAccelerated } from "@/prisma/db";
+import type { PrismaClient } from "@prisma/client/scripts/default-index";
 import type { LikeModel } from "../models";
 export class LikeAPI {
-  prisma: PrismaClientAccelerated;
+  prisma: PrismaClient;
 
-  constructor(prisma: PrismaClientAccelerated) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 

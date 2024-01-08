@@ -7,7 +7,6 @@ type User {
   id: ID!
   username: String!
   email: String!
-  password: String!
   role: Role!
   imageUrl: String
   blogs: [Blog!]
@@ -28,10 +27,7 @@ type Mutation {
   register(
     username: String!
     email: String!
-    password: String!
     imageUrl: String
   ): AuthResponse!
-  login(email: String!, password: String!): AuthResponse!
-  updateUserImageUrl(userId: ID!, imageUrl: String!): User!
-  resetUserPassword(email: String!, password: String!): User!
+  login(username: String!): AuthResponse!
 }
