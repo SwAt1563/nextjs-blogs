@@ -1,11 +1,14 @@
 "use client";
 import { gql } from "@/graphql-client/__generated__/";
 import { useQuery } from "@apollo/client";
-import { timeSince } from "@/src/app/lib/handle-time/created-at";
-import { Carousel, Row, Col } from "react-bootstrap";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import SearchTitle from "./(search)/search-title";
+import SearchCategory from "./(search)/search-category";
+import { AiFillLike, AiFillEye, AiOutlineComment } from "react-icons/ai";
+
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export const GET_HOME_BLOGS = gql(`
 query GetBlogsBySearchQuery($query: String, $categoryName: String, $limit: Int, $offset: Int) {
@@ -33,72 +36,147 @@ query GetBlogsBySearchQuery($query: String, $categoryName: String, $limit: Int, 
 `);
 
 const Blogs = () => {
-    const { data: blogs, loading, error, fetchMore } = useQuery(GET_HOME_BLOGS);
+  const searchParams = useSearchParams();
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :</p>;
+  const {
+    data: blogs,
+    loading,
+    error,
+    fetchMore,
+    refetch, // Use this to refetch the query
+  } = useQuery(GET_HOME_BLOGS, {
+    variables: {
+      offset: 0,
+      limit: 3,
+    },
+  });
 
-//   const [blogs, setBlogs] = useState<any>([]);
+  const handleLoadMore = () => {
+    fetchMore({
+      variables: {
+        offset: blogs?.getBlogsBySearchQuery?.blogs?.length || 0,
+        limit: 3,
+      },
+    });
+  };
 
-//   useEffect(() => {
-//     // Simulate fetching blogs data. Replace this with your actual fetch call.
-//     const fetchTopBlogs = async () => {
-//       // Placeholder for your fetching logic. This could be a GraphQL query using Apollo Client or any other method you prefer.
-//       const data = {
-//         getTopBlogs: [
-//           {
-//             id: "1",
-//             title: "First Blog",
-//             description:
-//               "loream ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-//             imageUrl: "https://picsum.photos/id/1/400/400",
-//             createdAt: "1703278235474",
-//             user: {
-//               username: "user1",
-//               email: "user1@example.com",
-//               id: "user1id",
-//               imageUrl: "https://picsum.photos/id/1005/400/400",
-//             },
-//           },
-//           {
-//             id: "2",
-//             title: "Second Blog",
-//             description: "This is the second blog",
-//             imageUrl: "https://picsum.photos/id/1/400/400",
-//             createdAt: "1703278235474",
-//             user: {
-//               username: "user2",
-//               email: "user2@example.com",
-//               id: "user2id",
-//               imageUrl: "https://picsum.photos/id/1005/400/400",
-//             },
-//           },
-//           {
-//             id: "3",
-//             title: "Third Blog",
-//             description: "This is the third blog",
-//             imageUrl: "https://picsum.photos/id/1/400/400",
-//             createdAt: "1703278235474",
-//             user: {
-//               username: "user3",
-//               email: "user3@example.com",
-//               id: "user3id",
-//               imageUrl: "https://picsum.photos/id/1005/400/400",
-//             },
-//           },
-//         ],
-//       };
-//       setBlogs(data.getTopBlogs);
-//     };
+  // Check if there are more tracks to load
+  const hasMoreTracks =
+    blogs?.getBlogsBySearchQuery?.blogs?.length !== undefined &&
+    blogs.getBlogsBySearchQuery.blogs.length <
+      blogs.getBlogsBySearchQuery.total;
 
-//     fetchTopBlogs();
-//   }, []);
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
 
- 
+    const query = params.get("query");
+    const categoryName = params.get("categoryName");
+
+    const search = { query, categoryName };
+
+    refetch({
+      ...search,
+      offset: 0,
+      limit: 3,
+    });
+
+  }, [refetch, searchParams]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :</p>;
 
   return (
     <>
-      
+      <div className="container">
+        <h1 className="text-center my-5">Blogs</h1>
+        <div className="row">
+          <div className="col-8">
+            <div className="row">
+              {blogs?.getBlogsBySearchQuery?.blogs?.map((blog: any) => (
+                <div key={blog.id} className="col-md-4">
+                  <Link href={`/blog/${blog.id}`}>
+                    <div className="card mb-4 shadow-sm">
+                      <div className="position-relative ">
+                        <Image
+                          src={blog.imageUrl}
+                          alt={blog.title}
+                          width={200}
+                          height={200}
+                          className="img-fluid rounded-top-3 w-100"
+                        />
+
+                        {/* Small Image Overlay */}
+                        <div
+                          className="position-absolute "
+                          style={{
+                            bottom: "-50px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                          }}
+                        >
+                          <Image
+                            src={blog.user.imageUrl}
+                            alt={blog.user.username}
+                            width={100} // Adjust based on your needs
+                            height={100} // Adjust based on your needs
+                            className="border border-5 rounded-circle border-white" // Makes the image circular
+                          />
+                        </div>
+                      </div>
+                      <div className="card-body mt-5 text-center">
+                        <p className="card-text">{blog.title}</p>
+
+                        <div className="row">
+                          <div className="col-4 border-end">
+                            <AiFillLike />
+                            <span className="ms-1">{blog.number_of_likes}</span>
+                          </div>
+
+                          {/* Views */}
+                          <div className="col-4 border-end">
+                            <AiFillEye />
+                            <span className="ms-1">{blog.number_of_views}</span>
+                          </div>
+
+                          {/* Comments */}
+                          <div className="col-4 ">
+                            <AiOutlineComment />
+                            <span className="ms-1">
+                              {blog.number_of_comments}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+
+              {/* If there are no blogs */}
+              {blogs?.getBlogsBySearchQuery?.blogs?.length === 0 && (
+                <div className="text-center">
+                  <h5>No blogs found</h5>
+                </div>
+              )}
+
+            </div>
+            <div className="text-center mb-3">
+              {hasMoreTracks && (
+                <button
+                  className="btn btn-info text-light"
+                  onClick={handleLoadMore}
+                >
+                  Load More
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="col-4">
+            <SearchTitle />
+            <SearchCategory />
+          </div>
+        </div>
+      </div>
     </>
   );
 };

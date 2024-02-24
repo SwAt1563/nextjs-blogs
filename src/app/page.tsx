@@ -8,9 +8,13 @@ import Blogs from "@/src/app/ui/home/blogs";
 
 export default withPageAuthRequired(
   async function Index() {
+   
+
     return (
-      <main className={`${styles.main} d-flex`}>
+      <main className={`${styles.main}`}>
         <Hero />
+
+        
         <Blogs />
       </main>
     );

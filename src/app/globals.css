@@ -80,3 +80,9 @@ h6 {
 p {
   color: var(--color-text-secondary);
 }
+
+.category:hover {
+  color: var(--color-bg);
+  background-color: var(--color-bg-secondary);
+  transition: color 0.1s ease-in-out;
+}
