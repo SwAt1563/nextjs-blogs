@@ -15,6 +15,7 @@ type Blog {
   comments: [Comment!]
   number_of_likes: Int!
   number_of_views: Int!
+  number_of_comments: Int!
   userMadeLike: Boolean
 }
 
@@ -26,6 +27,7 @@ type BlogPagination {
 type Query {
   getBlog(blogId: ID!, userId: ID!): Blog
   getBlogsByUser(userId: ID!): [Blog!]
+  getTopBlogs: [Blog!]
   getBlogs(
     offset: Int
     limit: Int

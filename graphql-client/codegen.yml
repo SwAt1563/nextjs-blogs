@@ -8,10 +8,11 @@
 
 schema: "./graphql-server/lib/schemas/*.graphql" # start path from root
 documents:
-  - "./app/**/*.tsx"
+  - "./src/app/**/*.tsx"
+  - "./src/app/**/*.ts"
 generates:
   "./graphql-client/__generated__/":
     preset: "client"
     presetConfig:
       gqlTagName: "gql"
-# ignoreNoDocuments: true # do that at the beginning before you have any documents
+#ignoreNoDocuments: true # do that at the beginning before you have any documents

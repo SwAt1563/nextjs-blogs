@@ -87,7 +87,7 @@ export class BlogAPI {
         user: true,
         category: true,
         _count: {
-          select: { views: true, likes: true },
+          select: { views: true, likes: true, comments: true },
         },
       },
     });
@@ -148,7 +148,7 @@ export class BlogAPI {
           user: true,
           category: true,
           _count: {
-            select: { views: true, likes: true },
+            select: { views: true, likes: true, comments: true },
           },
         },
         skip: offset,
@@ -200,7 +200,7 @@ export class BlogAPI {
           user: true,
           category: true,
           _count: {
-            select: { views: true, likes: true },
+            select: { views: true, likes: true, comments: true },
           },
         },
         skip: offset,
@@ -221,6 +221,37 @@ export class BlogAPI {
     };
   }
 
+  async getTopThreePublishedBlogsBasedOnLikes(): Promise<BlogModel[]> {
+    const blogs = await this.prisma.blog.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      include: {
+        user: true,
+        category: true,
+        _count: {
+          select: { views: true, likes: true, comments: true },
+        },
+      },
+      take: 3, // Get only the top 3 blogs
+      skip: 0,
+      orderBy: [
+        {
+          likes: {
+            _count: "desc", // Primary ordering by likes
+          },
+        },
+        {
+          views: {
+            _count: "desc", // Secondary ordering by views
+          },
+        },
+      ],
+    });
+
+    return blogs;
+  }
+
   async getBlogsByUser(userId: number): Promise<BlogModel[]> {
     return await this.prisma.blog.findMany({
       where: {
@@ -231,7 +262,7 @@ export class BlogAPI {
         user: true,
         category: true,
         _count: {
-          select: { views: true, likes: true },
+          select: { views: true, likes: true, comments: true },
         },
       },
       orderBy: {

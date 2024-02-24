@@ -16,5 +16,6 @@ export type BlogModel = {
   _count?: {
     views: number;
     likes: number;
+    comments: number;
   };
 };

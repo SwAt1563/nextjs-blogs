@@ -12,9 +12,7 @@ type User {
   blogs: [Blog!]
 }
 
-type Query {
-  getUser(userId: ID!): User
-}
+
 
 type AuthResponse {
   code: Int!
@@ -23,11 +21,17 @@ type AuthResponse {
   user: User
 }
 
+
+type Query {
+  getUser(userId: ID!): User
+  login(username: String!): AuthResponse!
+}
+
 type Mutation {
   register(
     username: String!
     email: String!
     imageUrl: String
   ): AuthResponse!
-  login(username: String!): AuthResponse!
+  
 }

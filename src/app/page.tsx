@@ -1,12 +1,19 @@
 import Image from "next/image";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "@/src/app/page.module.css";
+import Link from "next/link";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
+import Hero from "@/src/app/ui/home/hero";
+import Blogs from "@/src/app/ui/home/blogs";
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <h1>Hello World</h1>
-    </main>
-  );
-}
+export default withPageAuthRequired(
+  async function Index() {
+    return (
+      <main className={`${styles.main} d-flex`}>
+        <Hero />
+        <Blogs />
+      </main>
+    );
+  },
+  { returnTo: "/" }
+);

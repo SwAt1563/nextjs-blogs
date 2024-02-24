@@ -35,6 +35,7 @@ export type Blog = {
   description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   imageUrl?: Maybe<Scalars['String']['output']>;
+  number_of_comments: Scalars['Int']['output'];
   number_of_likes: Scalars['Int']['output'];
   number_of_views: Scalars['Int']['output'];
   status: Status;
@@ -82,7 +83,6 @@ export type Mutation = {
   createView: View;
   deleteBlog: Blog;
   deleteLike: Like;
-  login: AuthResponse;
   register: AuthResponse;
   updateBlog: Blog;
   updateBlogStatus: Blog;
@@ -133,11 +133,6 @@ export type MutationDeleteLikeArgs = {
 };
 
 
-export type MutationLoginArgs = {
-  username: Scalars['String']['input'];
-};
-
-
 export type MutationRegisterArgs = {
   email: Scalars['String']['input'];
   imageUrl?: InputMaybe<Scalars['String']['input']>;
@@ -164,7 +159,9 @@ export type Query = {
   getBlogsBySearchQuery?: Maybe<BlogPagination>;
   getBlogsByUser?: Maybe<Array<Blog>>;
   getCategories?: Maybe<Array<Category>>;
+  getTopBlogs?: Maybe<Array<Blog>>;
   getUser?: Maybe<User>;
+  login: AuthResponse;
 };
 
 
@@ -197,6 +194,11 @@ export type QueryGetBlogsByUserArgs = {
 
 export type QueryGetUserArgs = {
   userId: Scalars['ID']['input'];
+};
+
+
+export type QueryLoginArgs = {
+  username: Scalars['String']['input'];
 };
 
 export enum Role {
@@ -349,6 +351,7 @@ export type BlogResolvers<ContextType = DataSourceContext, ParentType extends Re
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   imageUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  number_of_comments?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   number_of_likes?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   number_of_views?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
@@ -396,7 +399,6 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createView?: Resolver<ResolversTypes['View'], ParentType, ContextType, RequireFields<MutationCreateViewArgs, 'blogId' | 'userId'>>;
   deleteBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationDeleteBlogArgs, 'blogId'>>;
   deleteLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, RequireFields<MutationDeleteLikeArgs, 'blogId' | 'userId'>>;
-  login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'username'>>;
   register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'username'>>;
   updateBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogArgs, 'blogId'>>;
   updateBlogStatus?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogStatusArgs, 'blogId'>>;
@@ -408,7 +410,9 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   getBlogsBySearchQuery?: Resolver<Maybe<ResolversTypes['BlogPagination']>, ParentType, ContextType, Partial<QueryGetBlogsBySearchQueryArgs>>;
   getBlogsByUser?: Resolver<Maybe<Array<ResolversTypes['Blog']>>, ParentType, ContextType, RequireFields<QueryGetBlogsByUserArgs, 'userId'>>;
   getCategories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  getTopBlogs?: Resolver<Maybe<Array<ResolversTypes['Blog']>>, ParentType, ContextType>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
+  login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'username'>>;
 }>;
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{

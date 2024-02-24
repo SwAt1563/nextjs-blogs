@@ -10,6 +10,10 @@ export const blogResolvers: Resolvers = {
       return await dataSources.blogAPI.getBlogsByUser(Number(userId));
     },
 
+    getTopBlogs: async (_, __, { dataSources }: { dataSources: any }) => {
+      return await dataSources.blogAPI.getTopThreePublishedBlogsBasedOnLikes();
+    },
+
     getBlogs: async (
       _,
       { offset, limit, categoryName, status },
@@ -105,6 +109,10 @@ export const blogResolvers: Resolvers = {
 
     comments: async ({ id }, _, { dataSources }) => {
       return await dataSources.commentAPI.getBlogComments(Number(id));
+    },
+
+    number_of_comments: async ({ _count }, _, __) => {
+      return _count?.comments || 0;
     },
 
     number_of_views: async ({ _count }, _, __) => {

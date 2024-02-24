@@ -5,6 +5,36 @@ export const userResolvers: Resolvers = {
     getUser: async (_, { userId }, { dataSources }) => {
       return await dataSources.userAPI.getUserById(Number(userId));
     },
+
+    login: async (_, { username }, { dataSources }) => {
+      try {
+        const response = await dataSources.userAPI.loginUser(username);
+
+        if (!response.success) {
+          return {
+            code: 401, // Unauthorized
+            success: false,
+            message: response.error as string,
+            user: null,
+          };
+        }
+
+        return {
+          code: 200,
+          success: true,
+          message: `Successfully logged`,
+          user: response.user,
+        };
+      } catch (err) {
+        return {
+          code: 500, // Internal Server Error
+          success: false,
+          message: "Internal Server Error",
+          user: null,
+        };
+      }
+    },
+    
   },
 
   Mutation: {
@@ -39,34 +69,7 @@ export const userResolvers: Resolvers = {
       }
     },
 
-    login: async (_, { username }, { dataSources }) => {
-      try {
-        const response = await dataSources.userAPI.loginUser(username);
-
-        if (!response.success) {
-          return {
-            code: 401, // Unauthorized
-            success: false,
-            message: response.error as string,
-            user: null,
-          };
-        }
-
-        return {
-          code: 200,
-          success: true,
-          message: `Successfully logged`,
-          user: response.user,
-        };
-      } catch (err) {
-        return {
-          code: 500, // Internal Server Error
-          success: false,
-          message: "Internal Server Error",
-          user: null,
-        };
-      }
-    },
+    
 
   },
 
