@@ -8,7 +8,7 @@ import SearchCategory from "./(search)/search-category";
 import { AiFillLike, AiFillEye, AiOutlineComment } from "react-icons/ai";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export const GET_HOME_BLOGS = gql(`
 query GetBlogsBySearchQuery($query: String, $categoryName: String, $limit: Int, $offset: Int) {
@@ -37,6 +37,13 @@ query GetBlogsBySearchQuery($query: String, $categoryName: String, $limit: Int, 
 
 const Blogs = () => {
   const searchParams = useSearchParams();
+  const [oldSearchParams, setOldSearchParams] = useState<{
+    query: string | null;
+    categoryName: string | null;
+  }>({
+    query: null,
+    categoryName: null,
+  });
 
   const {
     data: blogs,
@@ -74,23 +81,27 @@ const Blogs = () => {
 
     const search = { query, categoryName };
 
-    refetch({
-      ...search,
-      offset: 0,
-      limit: 3,
-    });
+    const areEqual = JSON.stringify(search) === JSON.stringify(oldSearchParams);
 
-  }, [refetch, searchParams]);
+    if (!areEqual) {
+      setOldSearchParams(search);
+      refetch({
+        ...search,
+        offset: 0,
+        limit: 3,
+      });
+    }
+  }, [refetch, searchParams, oldSearchParams]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
 
   return (
     <>
-      <div className="container">
+      <div className="container mb-3">
         <h1 className="text-center my-5">Blogs</h1>
         <div className="row">
-          <div className="col-8">
+          <div className="col-lg-8">
             <div className="row">
               {blogs?.getBlogsBySearchQuery?.blogs?.map((blog: any) => (
                 <div key={blog.id} className="col-md-4">
@@ -158,7 +169,6 @@ const Blogs = () => {
                   <h5>No blogs found</h5>
                 </div>
               )}
-
             </div>
             <div className="text-center mb-3">
               {hasMoreTracks && (
@@ -171,7 +181,7 @@ const Blogs = () => {
               )}
             </div>
           </div>
-          <div className="col-4">
+          <div className="col-lg-4">
             <SearchTitle />
             <SearchCategory />
           </div>

@@ -35,7 +35,7 @@ export default function NavLinks() {
 
         return (
           <li key={link.name} className="nav-item">
-            <Link href={link.href} className="nav-link">
+            <Link href={link.name === "Profile" ? link.href + "/" + user.id : link.href} className="nav-link">
               {link.name}
             </Link>
           </li>

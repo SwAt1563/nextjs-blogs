@@ -1,25 +1,19 @@
 import styles from "./page.module.css";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-import { getSession } from "@auth0/nextjs-auth0";
+import UserBlogs from "./(blogs)/user-blogs";
 
 export default withPageAuthRequired(
-  async function UpdateBlog({
-    params,
-  }: {
-    params?: Record<string, string | string[]>;
-  }) {
-    const { id } = params as { id: string };
+  async function Profile({ params }: { params?: Record<string, string | string[]> }) {
 
-    const session = await getSession();
-    const user = session?.user;
+   
+    const { id } = params as { id: string };
 
     return (
       <>
         <div className="container">
           <div className="row">
             <div className="col-12">
-              update
-              {user?.id}
+              <UserBlogs userId={id} styles={styles} />
             </div>
           </div>
         </div>
@@ -28,7 +22,7 @@ export default withPageAuthRequired(
   },
   {
     returnTo({ params }: { params?: Record<string, string | string[]> }) {
-      return `/blog/${params?.id}/update`;
+      return `/profile/${params?.id}`;
     },
   }
 );

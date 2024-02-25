@@ -1,0 +1,365 @@
+"use client";
+import { gql } from "@/graphql-client/__generated__/";
+import { useQuery, useMutation } from "@apollo/client";
+import Image from "next/image";
+import Link from "next/link";
+
+import { notFound } from "next/navigation";
+import { timeSince } from "@/src/app/lib/handle-time/created-at";
+
+import React, { useState, useEffect } from "react";
+import { FaRegThumbsUp, FaRegEye } from "react-icons/fa";
+import { BsThreeDots } from "react-icons/bs";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+export const GET_BLOG = gql(`
+query GetBlog($blogId: ID!, $userId: ID!) {
+  getBlog(blogId: $blogId, userId: $userId) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    category {
+      name
+    }
+    imageUrl
+    user {
+      id
+      email
+      imageUrl
+      username
+    }
+    userMadeLike
+    number_of_views
+    number_of_likes
+    number_of_comments
+    comments {
+      content
+      createdAt
+      user {
+        id
+        username
+        imageUrl
+      }
+    }
+  }
+}
+`);
+
+export const CREATE_COMMENT = gql(`
+mutation CreateComment($userId: ID!, $blogId: ID!, $content: String!) {
+  createComment(userId: $userId, blogId: $blogId, content: $content) {
+    content
+    createdAt
+    user {
+      id
+      username
+      imageUrl
+    }
+  }
+}
+`);
+
+export const CREATE_VIEW = gql(`
+mutation CreateView($userId: ID!, $blogId: ID!) {
+  createView(userId: $userId, blogId: $blogId) {
+    id
+    blogId
+    userId
+  }
+}
+`);
+
+export const CREATE_LIKE = gql(`
+mutation CreateLike($userId: ID!, $blogId: ID!) {
+  createLike(userId: $userId, blogId: $blogId) {
+    id
+    blogId
+    userId
+  }
+}
+`);
+
+export const DELETE_LIKE = gql(`
+mutation DeleteLike($userId: ID!, $blogId: ID!) {
+  deleteLike(userId: $userId, blogId: $blogId) {
+    id
+    blogId
+    userId
+  }
+}
+`);
+
+const BlogContent = ({
+  blogId,
+  userId,
+  styles,
+}: {
+  blogId: string;
+  userId: string;
+  styles: {
+    readonly [key: string]: string;
+  };
+}) => {
+  const [newComment, setNewComment] = useState("");
+
+  const [createComment] = useMutation(CREATE_COMMENT);
+
+  const [createView] = useMutation(CREATE_VIEW, {
+    variables: {
+      userId,
+      blogId,
+    },
+  });
+  const [createLike] = useMutation(CREATE_LIKE, {
+    variables: {
+      userId,
+      blogId,
+    },
+  });
+  const [deleteLike] = useMutation(DELETE_LIKE, {
+    variables: {
+      userId,
+      blogId,
+    },
+  });
+
+  const {
+    data: blog,
+    loading,
+    client,
+  } = useQuery(GET_BLOG, {
+    variables: {
+      blogId,
+      userId,
+    },
+  });
+
+  useEffect(() => {
+    createView();
+  }, [blogId]);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (blog?.getBlog === null) {
+    return notFound();
+  }
+
+  const handleKeyPress = (e: {
+    key: string;
+    shiftKey: any;
+    preventDefault: () => void;
+  }) => {
+    // Check if the Enter key is pressed without holding the Shift key
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent the default action to stop from submitting the form or adding a new line
+
+      if (newComment.trim() !== "") {
+        const newCommentData = {
+          userId,
+          blogId,
+          content: newComment,
+        };
+
+        createComment({
+          variables: newCommentData,
+        });
+
+        // https://www.apollographql.com/docs/react/caching/cache-interaction
+
+        // update all the query
+        // client.cache.updateQuery(
+        //   { query: GET_BLOG, variables: { blogId, userId } },
+        //   (data: any) => {
+        //     return {
+        //       getBlog: {
+        //         ...data.getBlog,
+        //         comments: [
+        //           ...data.getBlog.comments,
+        //           {
+        //             content: newComment,
+        //             createdAt: Date.now().toString(),
+        //             user: {
+        //               id: userId,
+        //               username: data.getBlog.user.username,
+        //               imageUrl: data.getBlog.user.imageUrl,
+        //             },
+        //           },
+        //         ],
+        //       },
+        //     };
+        //   }
+        // );
+
+        // modify a single field
+        client.cache.modify({
+          id: `Blog:${blog?.getBlog?.id}`, // client.cache.identify(blog?.getBlog)
+          fields: {
+            comments(existingComments = []) {
+              const newCommentRef = {
+                content: newComment,
+                createdAt: Date.now().toString(),
+                user: {
+                  id: userId,
+                  username: blog?.getBlog?.user?.username,
+                  imageUrl: blog?.getBlog?.user?.imageUrl,
+                },
+              };
+
+              return [...existingComments, newCommentRef];
+            },
+          },
+        });
+
+        setNewComment("");
+      }
+    }
+  };
+
+  const handleLike = () => {
+    if (blog?.getBlog?.userMadeLike) {
+      deleteLike();
+      client.cache.modify({
+        id: `Blog:${blog?.getBlog?.id}`,
+        fields: {
+          number_of_likes(existingLikes = 0) {
+            return existingLikes - 1;
+          },
+          userMadeLike() {
+            return false;
+          },
+        },
+      });
+    } else {
+      createLike();
+      client.cache.modify({
+        id: `Blog:${blog?.getBlog?.id}`,
+        fields: {
+          number_of_likes(existingLikes = 0) {
+            return existingLikes + 1;
+          },
+          userMadeLike() {
+            return true;
+          },
+        },
+      });
+    }
+  };
+
+  return (
+    <>
+      <div className="container my-5">
+        <div className="border border-dark rounded p-5 position-relative">
+          {userId === blog?.getBlog?.user?.id && (
+            <Link href={`/blog/${blog?.getBlog?.id}/update`}>
+              <button className="btn btn-primary position-absolute top-0 end-0 mt-5 me-5 d-none d-md-block">
+                Edit Blog
+              </button>
+              {/* Three dots button for small screens */}
+              <div className="position-absolute top-0 end-0 mt-5 me-5 d-block d-md-none">
+                <BsThreeDots />
+              </div>
+            </Link>
+          )}
+          <div className="d-flex align-items-center mb-3">
+            <Link href={`/profile/${blog?.getBlog?.user?.id}`}>
+              <Image
+                src={blog?.getBlog?.user?.imageUrl as string}
+                alt={blog?.getBlog?.user?.username as string}
+                width={50}
+                height={50}
+                className="rounded-circle"
+              />
+            </Link>
+            <div className="mx-3">
+              <strong>{blog?.getBlog?.user?.username}</strong>
+            </div>
+
+            <div>{timeSince(blog?.getBlog?.createdAt as string)}</div>
+          </div>
+          <h1>{blog?.getBlog?.title}</h1>
+          <Link href={`/?categoryName=${blog?.getBlog?.category?.name}`}>
+          <h4 className="text-primary">{blog?.getBlog?.category?.name}</h4>
+          </Link>
+          <div className="mb-3 mt-5">
+            <Image
+              src={blog?.getBlog?.imageUrl as string}
+              alt={blog?.getBlog?.title as string}
+              width={600}
+              height={400}
+              className="img-fluid rounded w-100"
+            />
+          </div>
+          <p>{blog?.getBlog?.description}</p>
+          <div className="d-flex align-items-center">
+            <button
+              className={`btn border-0 ${
+                blog?.getBlog?.userMadeLike ? "text-primary" : ""
+              }`}
+              onClick={handleLike}
+            >
+              <FaRegThumbsUp className="me-2" />
+              {blog?.getBlog?.number_of_likes}
+            </button>
+
+            <div className="ms-3">
+              <FaRegEye className="me-2" /> {blog?.getBlog?.number_of_views}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container my-5 comments">
+        <div className="border border-dark rounded p-5">
+          <h3>Comments</h3>
+          <hr className="mb-4" />
+          {blog?.getBlog?.comments &&
+            blog?.getBlog?.comments.map((comment, index) => (
+              <div key={index}>
+                {index > 0 && (
+                  <div className="text-center">
+                    <hr
+                      style={{ width: "90%", margin: "auto" }}
+                      className="mb-3"
+                    />
+                  </div>
+                )}
+                <div className="d-flex mb-3">
+                  <Link href={`/profile/${comment?.user?.id}`}>
+                    <Image
+                      src={comment?.user?.imageUrl as string}
+                      alt={comment?.user?.username as string}
+                      width={50}
+                      height={50}
+                      className="rounded-circle me-2"
+                    />
+                  </Link>
+                  <div>
+                    <div className="fw-bold">{comment?.user?.username}</div>
+
+                    <div className="text-muted" style={{ fontSize: "0.8rem" }}>
+                      {timeSince(comment?.createdAt as string)}
+                    </div>
+                    <p className="mt-3">{comment.content}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          <textarea
+            className="form-control"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Write a comment..."
+            rows={3}
+          ></textarea>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default BlogContent;

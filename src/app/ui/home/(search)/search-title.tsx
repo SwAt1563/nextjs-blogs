@@ -19,6 +19,7 @@ const SearchTitle = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 500);
 
+
   return (
     <>
       <div className="d-flex flex-grow-1 flex-shrink-0 position-relative">
