@@ -11,8 +11,8 @@ import React, { useState, useEffect } from "react";
 import { FaRegThumbsUp, FaRegEye } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 export const GET_BLOG = gql(`
 query GetBlog($blogId: ID!, $userId: ID!) {
@@ -93,6 +93,19 @@ mutation DeleteLike($userId: ID!, $blogId: ID!) {
 }
 `);
 
+export const UPDATE_BLOG_DESCRIPTION = gql(`
+mutation UpdateBlog($blogId: ID!, $title: String, $description: String, $imageUrl: String) {
+  updateBlog(blogId: $blogId, title: $title, description: $description, imageUrl: $imageUrl) {
+    id
+    title
+    description
+    imageUrl
+    updatedAt
+    createdAt
+  }
+}
+`);
+
 const BlogContent = ({
   blogId,
   userId,
@@ -105,8 +118,10 @@ const BlogContent = ({
   };
 }) => {
   const [newComment, setNewComment] = useState("");
+  const [editDescriptionShow, setEditDescriptionShow] = useState(false);
 
   const [createComment] = useMutation(CREATE_COMMENT);
+  const [updateBlogDescription] = useMutation(UPDATE_BLOG_DESCRIPTION);
 
   const [createView] = useMutation(CREATE_VIEW, {
     variables: {
@@ -138,9 +153,15 @@ const BlogContent = ({
     },
   });
 
+  const [newDescription, setNewDescription] = useState("");
+
   useEffect(() => {
     createView();
   }, [blogId]);
+
+  useEffect(() => {
+    setNewDescription(blog?.getBlog?.description ?? "");
+  }, [blog?.getBlog?.description]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -249,20 +270,73 @@ const BlogContent = ({
     }
   };
 
+  const handleUpdateBlogDescription = () => {
+    updateBlogDescription({
+      variables: {
+        blogId,
+        description: newDescription,
+      },
+    });
+
+    client.cache.modify({
+      id: `Blog:${blog?.getBlog?.id}`,
+      fields: {
+        description() {
+          return newDescription;
+        },
+      },
+    });
+
+    setEditDescriptionShow(false);
+  };
+
   return (
     <>
       <div className="container my-5">
         <div className="border border-dark rounded p-5 position-relative">
           {userId === blog?.getBlog?.user?.id && (
-            <Link href={`/blog/${blog?.getBlog?.id}/update`}>
-              <button className="btn btn-primary position-absolute top-0 end-0 mt-5 me-5 d-none d-md-block">
-                Edit Blog
-              </button>
-              {/* Three dots button for small screens */}
-              <div className="position-absolute top-0 end-0 mt-5 me-5 d-block d-md-none">
-                <BsThreeDots />
+            <div className="edit-description">
+              <div onClick={() => setEditDescriptionShow(true)}>
+                <button className="btn btn-primary position-absolute top-0 end-0 mt-5 me-5 d-none d-md-block">
+                  Edit Blog
+                </button>
+                {/* Three dots button for small screens */}
+                <div className="position-absolute top-0 end-0 mt-5 me-5 d-block d-md-none">
+                  <BsThreeDots />
+                </div>
               </div>
-            </Link>
+
+              <Modal
+                show={editDescriptionShow}
+                onHide={() => setEditDescriptionShow(false)}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit Blog Description</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <textarea
+                    className="form-control"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    rows={3}
+                  ></textarea>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setEditDescriptionShow(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleUpdateBlogDescription()}
+                  >
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
           )}
           <div className="d-flex align-items-center mb-3">
             <Link href={`/profile/${blog?.getBlog?.user?.id}`}>
@@ -282,7 +356,7 @@ const BlogContent = ({
           </div>
           <h1>{blog?.getBlog?.title}</h1>
           <Link href={`/?categoryName=${blog?.getBlog?.category?.name}`}>
-          <h4 className="text-primary">{blog?.getBlog?.category?.name}</h4>
+            <h4 className="text-primary">{blog?.getBlog?.category?.name}</h4>
           </Link>
           <div className="mb-3 mt-5">
             <Image

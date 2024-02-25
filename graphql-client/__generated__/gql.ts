@@ -20,6 +20,7 @@ const documents = {
     "\nmutation CreateView($userId: ID!, $blogId: ID!) {\n  createView(userId: $userId, blogId: $blogId) {\n    id\n    blogId\n    userId\n  }\n}\n": types.CreateViewDocument,
     "\nmutation CreateLike($userId: ID!, $blogId: ID!) {\n  createLike(userId: $userId, blogId: $blogId) {\n    id\n    blogId\n    userId\n  }\n}\n": types.CreateLikeDocument,
     "\nmutation DeleteLike($userId: ID!, $blogId: ID!) {\n  deleteLike(userId: $userId, blogId: $blogId) {\n    id\n    blogId\n    userId\n  }\n}\n": types.DeleteLikeDocument,
+    "\nmutation UpdateBlog($blogId: ID!, $title: String, $description: String, $imageUrl: String) {\n  updateBlog(blogId: $blogId, title: $title, description: $description, imageUrl: $imageUrl) {\n    id\n    title\n    description\n    imageUrl\n    updatedAt\n    createdAt\n  }\n}\n": types.UpdateBlogDocument,
     "\nmutation CreateBlog($userId: ID!, $title: String!, $description: String!, $categoryName: String!, $imageUrl: String) {\n  createBlog(userId: $userId, title: $title, description: $description, categoryName: $categoryName, imageUrl: $imageUrl) {\n    id\n  }\n}\n": types.CreateBlogDocument,
     "\nquery GetCategories {\n  getCategories {\n    name\n  }\n\n}\n": types.GetCategoriesDocument,
     "\nquery GetBlogsByUser($userId: ID!) {\n  getBlogsByUser(userId: $userId) {\n    id\n    title\n    description\n    imageUrl\n    status\n    createdAt\n    category {\n      name\n    }\n    number_of_likes\n    number_of_views\n    number_of_comments\n  }\n}\n": types.GetBlogsByUserDocument,
@@ -70,6 +71,10 @@ export function gql(source: "\nmutation CreateLike($userId: ID!, $blogId: ID!) {
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation DeleteLike($userId: ID!, $blogId: ID!) {\n  deleteLike(userId: $userId, blogId: $blogId) {\n    id\n    blogId\n    userId\n  }\n}\n"): (typeof documents)["\nmutation DeleteLike($userId: ID!, $blogId: ID!) {\n  deleteLike(userId: $userId, blogId: $blogId) {\n    id\n    blogId\n    userId\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation UpdateBlog($blogId: ID!, $title: String, $description: String, $imageUrl: String) {\n  updateBlog(blogId: $blogId, title: $title, description: $description, imageUrl: $imageUrl) {\n    id\n    title\n    description\n    imageUrl\n    updatedAt\n    createdAt\n  }\n}\n"): (typeof documents)["\nmutation UpdateBlog($blogId: ID!, $title: String, $description: String, $imageUrl: String) {\n  updateBlog(blogId: $blogId, title: $title, description: $description, imageUrl: $imageUrl) {\n    id\n    title\n    description\n    imageUrl\n    updatedAt\n    createdAt\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
