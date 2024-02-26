@@ -1,11 +1,11 @@
 "use client";
 import { useQuery } from "@apollo/client";
-import { timeSince } from "@/src/app/lib/handle-time/time";
+import { timeSince } from "@/src/lib/handle-time/time";
 import { Carousel, Row, Col } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 
-import { GET_TOP_BLOGS } from "@/src/app/requests/queries";
+import { GET_TOP_BLOGS } from "@/src/requests/queries";
 
 
 

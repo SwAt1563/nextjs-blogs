@@ -1,11 +1,10 @@
-import styles from "./page.module.css";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { getSession } from "@auth0/nextjs-auth0";
 
-import BlogContent from "./(content)/blog-content";
+import BlogContent from "@/src/app/ui/blog/blog-content";
 
 export default withPageAuthRequired(
-  async function Blog({
+  async function Page({
     params,
   }: {
     params?: Record<string, string | string[]>;
@@ -17,8 +16,7 @@ export default withPageAuthRequired(
 
     return (
       <>
-        <BlogContent blogId={id} userId={user?.id} styles={styles} />
-        
+        <BlogContent blogId={id} userId={user?.id} />
       </>
     );
   },

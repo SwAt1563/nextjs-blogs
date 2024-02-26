@@ -1,17 +1,18 @@
 import Link from "next/link";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 export default function NotFound() {
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-2">
-      <h2 className="text-xl font-semibold">404 Not Found</h2>
-      <p>Could not find the requested invoice.</p>
-      <Link
-        href="/"
-        className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
-      >
-        Go Back
-      </Link>
-    </main>
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{ height: "100vh" }}
+    >
+      <div className="text-center">
+        <h2 className="h2 mb-4">404 Not Found</h2>
+        <p>Could not find the requested url.</p>
+        <Link href="/" passHref>
+          <span className="btn btn-primary mt-3">Go Home</span>
+        </Link>
+      </div>
+    </div>
   );
 }

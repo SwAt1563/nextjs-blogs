@@ -8,12 +8,14 @@ import clsx from "clsx";
 
 import { useEffect, useState } from "react";
 
-import { CREATE_BLOG, GET_CATEGORIES } from "./queries-mutations";
+import { CREATE_BLOG } from "@/src/requests/mutations";
+import { GET_CATEGORIES } from "@/src/requests/queries";
+
 import { useMutation, useQuery } from "@apollo/client";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema, FormData } from "./validation";
+import { formSchema, FormData } from "@/src/lib/validations/create-blog";
 
 import ImageDropzone from "./ImageDropZone";
 import type { ImageUploadFormState } from "./ImageDropZone";

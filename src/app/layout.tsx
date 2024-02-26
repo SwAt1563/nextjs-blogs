@@ -2,12 +2,12 @@ import { Providers } from "@/graphql-client/lib/apollo-client";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 import type { Metadata } from "next";
-import BootstrapClient from "@/src/components/BootstrapClient";
+import BootstrapClient from "@/src/lib/BootstrapClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 
-import Footer from "@/src/app/ui/footer/footer";
-import Header from "@/src/app/ui/header/header";
+import Footer from "@/src/app/ui/footer";
+import Header from "@/src/app/ui/header";
 
 
 

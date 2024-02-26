@@ -6,7 +6,7 @@ import {
   SetStateAction,
 } from "react";
 import { useDropzone } from "react-dropzone";
-import { uploadFile } from "@/src/app/lib/actions/image-actions";
+import { uploadFile } from "@/src/lib/actions/image-actions";
 import { useFormState } from "react-dom";
 import clsx from "clsx";
 

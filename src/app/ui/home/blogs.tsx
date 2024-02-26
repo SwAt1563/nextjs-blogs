@@ -2,13 +2,14 @@
 import { useQuery } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
-import SearchTitle from "./(search)/search-title";
-import SearchCategory from "./(search)/search-category";
+import SearchTitle from "./search/search-title";
+import SearchCategory from "./search/search-category";
 import { AiFillLike, AiFillEye, AiOutlineComment } from "react-icons/ai";
 
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
+import { GET_HOME_BLOGS } from "@/src/requests/queries";
 
 const Blogs = () => {
   const searchParams = useSearchParams();

@@ -5,5 +5,5 @@ type View {
 }
 
 type Mutation {
-  createView(userId: ID!, blogId: ID!): View!
+  createView(userId: ID!, blogId: ID!): Boolean!
 }

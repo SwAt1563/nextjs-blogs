@@ -2,22 +2,17 @@
 import { useQuery, useMutation } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
-import { FaUsers } from "react-icons/fa";
-import { MdDrafts } from "react-icons/md";
-import { TbWorldDownload } from "react-icons/tb";
 import { BsThreeDots } from "react-icons/bs";
 
-import { formatDate } from "@/src/app/lib/handle-time/time";
-import { useState,  ChangeEvent } from "react";
+import { formatDate } from "@/src/lib/handle-time/time";
+import { useState, ChangeEvent } from "react";
 
+import { DASHBOARD } from "@/src/requests/queries";
+import { UPDATE_BLOG_STATUS, DELETE_BLOG } from "@/src/requests/mutations";
 
-const Stats = ({
-  styles,
-}: {
-  styles: {
-    readonly [key: string]: string;
-  };
-}) => {
+import { TableSkeleton } from "@/src/app/ui/skeletons";
+
+const Table = () => {
   const [filterOption, setFilterOption] = useState<
     "ALL" | "PUBLISHED" | "DRAFT"
   >("ALL");
@@ -29,11 +24,10 @@ const Stats = ({
     },
   });
 
-  const { data: stats } = useQuery(GET_STATS);
   const [updateBlogStatus] = useMutation(UPDATE_BLOG_STATUS);
   const [deleteBlog] = useMutation(DELETE_BLOG);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <TableSkeleton />;
 
   const handleRefetch = (e: ChangeEvent<HTMLInputElement>) => {
     const option = e.target.value as "ALL" | "PUBLISHED" | "DRAFT";
@@ -53,7 +47,7 @@ const Stats = ({
     }
   };
 
-  const handleDelete = async (blogId: string) => {
+  const handleDelete = async (blogId: string, status: string) => {
     await deleteBlog({
       variables: {
         blogId,
@@ -62,6 +56,33 @@ const Stats = ({
 
     // delete the blog from the cache
     client.cache.evict({ id: `Blog:${blogId}` });
+
+    client.cache.modify({
+      id: `ROOT_QUERY`, // Specifies the entry point in the cache
+      fields: {
+        getStats(existingStats, { readField }) {
+          // Assuming you want to update within getStats directly
+          const totalPublishedBlogs = readField(
+            "totalPublishedBlogs",
+            existingStats
+          ) as number;
+          const totalDraftBlogs = readField(
+            "totalDraftBlogs",
+            existingStats
+          ) as number;
+
+          return {
+            ...existingStats,
+            totalPublishedBlogs:
+              status === "PUBLISHED"
+                ? totalPublishedBlogs - 1
+                : totalPublishedBlogs,
+            totalDraftBlogs:
+              status === "DRAFT" ? totalDraftBlogs - 1 : totalDraftBlogs,
+          };
+        },
+      },
+    });
   };
 
   const handleUpdateStatus = async (blogId: string, status: string) => {
@@ -77,6 +98,33 @@ const Stats = ({
       fields: {
         status() {
           return status;
+        },
+      },
+    });
+
+    client.cache.modify({
+      id: `ROOT_QUERY`, // Specifies the entry point in the cache
+      fields: {
+        getStats(existingStats, { readField }) {
+          // Assuming you want to update within getStats directly
+          const totalPublishedBlogs = readField(
+            "totalPublishedBlogs",
+            existingStats
+          ) as number;
+          const totalDraftBlogs = readField(
+            "totalDraftBlogs",
+            existingStats
+          ) as number;
+
+          return {
+            ...existingStats,
+            totalPublishedBlogs:
+              status === "PUBLISHED"
+                ? totalPublishedBlogs + 1
+                : totalPublishedBlogs - 1,
+            totalDraftBlogs:
+              status === "DRAFT" ? totalDraftBlogs + 1 : totalDraftBlogs - 1,
+          };
         },
       },
     });
@@ -98,44 +146,6 @@ const Stats = ({
 
   return (
     <>
-      <div className="row">
-        <div className="col-md-4 mt-2">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Total Users</h5>
-              <div className="d-flex align-items-center">
-                <FaUsers className="text-primary" size={30} />
-                <span className="ms-2">{stats?.getStats?.totalUsers}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4 mt-2">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Total Published Blogs</h5>
-              <div className="d-flex align-items-center">
-                <TbWorldDownload className="text-primary" size={30} />
-                <span className="ms-2">
-                  {stats?.getStats?.totalPublishedBlogs}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4 mt-2">
-          <div className="card">
-            <div className="card-body">
-              <h5 className="card-title">Total Draft Blogs</h5>
-              <div className="d-flex align-items-center">
-                <MdDrafts className="text-primary" size={30} />
-                <span className="ms-2">{stats?.getStats?.totalDraftBlogs}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="row mt-3">
         <div className="col-lg-10">
           <h3>Recent Blogs</h3>
@@ -202,7 +212,11 @@ const Stats = ({
                         </button>
                         <button
                           className="btn btn-sm btn-outline-danger"
-                          onClick={handleDelete.bind(null, blog.id)}
+                          onClick={handleDelete.bind(
+                            null,
+                            blog.id,
+                            blog.status
+                          )}
                         >
                           Delete
                         </button>
@@ -274,4 +288,4 @@ const Stats = ({
   );
 };
 
-export default Stats;
+export default Table;

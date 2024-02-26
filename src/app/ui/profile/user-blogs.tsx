@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Card, Button, ListGroup } from "react-bootstrap";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { notFound } from "next/navigation";
-import { timeSince } from "@/src/app/lib/handle-time/time";
+import { timeSince } from "@/src/lib/handle-time/time";
 
+import { GET_USER_BLOGS, GET_USER } from "@/src/requests/queries";
 
 const UserBlogs = ({
   userId,
@@ -74,15 +75,14 @@ const UserBlogs = ({
             >
               <Card.Title>{user?.getUser?.username}</Card.Title>
               <Card.Text>{user?.getUser?.email}</Card.Text>
-             
-                  <Card.Text>
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  </Card.Text>
-                  <Button variant="primary">Read my bio</Button>
-               
+
+              <Card.Text>
+                lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+              </Card.Text>
+              <Button variant="primary">Read my bio</Button>
 
               <ListGroup className="list-group-flush">
                 <ListGroup.Item>
@@ -130,7 +130,7 @@ const UserBlogs = ({
                 {userBlogs?.getBlogsByUser?.map((blog: any) => (
                   <div key={blog.id} className="col-md-4">
                     <div className="card mb-4 shadow-sm">
-                      <div className="position-relative ">
+                      <div className="position-relative">
                         <Image
                           src={blog.imageUrl}
                           alt={blog.title}
@@ -144,14 +144,29 @@ const UserBlogs = ({
                         <h6 className="text-muted">
                           Posted {timeSince(blog.createdAt)}
                         </h6>
-                        <h4 className="card-text">{blog.title}</h4>
-                        <p className="card-text">
+                        {/* Link wrapped around the title */}
+                        <Link href={`/blog/${blog.id}`}>
+                          <h4 className="card-text text-dark">{blog.title}</h4>
+                        </Link>
+                        <p className="card-text mt-3">
                           {truncateDescription(blog.description)}
                         </p>
-
-                        <Link href={`/blog/${blog.id}`}>
-                          {blog.category.name}
-                        </Link>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div className="btn-group">
+                            {/* Place other buttons or content here if needed */}
+                          </div>
+                          <small
+                            className="text-primary"
+                            style={{
+                              position: "absolute",
+                              bottom: 0,
+                              right: 0,
+                              padding: "10px",
+                            }}
+                          >
+                            {blog.category.name}
+                          </small>
+                        </div>
                       </div>
                     </div>
                   </div>

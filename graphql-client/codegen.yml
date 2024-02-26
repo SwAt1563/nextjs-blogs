@@ -8,8 +8,7 @@
 
 schema: "./graphql-server/lib/schemas/*.graphql" # start path from root
 documents:
-  - "./src/app/**/*.tsx"
-  - "./src/app/**/*.ts"
+  - "./src/requests/**/*.ts"
 generates:
   "./graphql-client/__generated__/":
     preset: "client"

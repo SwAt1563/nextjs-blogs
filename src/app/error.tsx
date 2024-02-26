@@ -1,5 +1,5 @@
 // Error.tsx
-'use client';
+"use client";
 import React from "react";
 
 export const Error = ({
@@ -9,10 +9,20 @@ export const Error = ({
   error: Error & { digest?: string };
   reset: () => void;
 }) => (
-  <>
-    {error && <div>{error.message} </div>}
-    <button onClick={reset}>Reset</button>
-  </>
+  <div className="d-flex vh-100 justify-content-center align-items-center">
+    <div>
+      {error && (
+        <div className="alert alert-danger text-center" role="alert">
+          {error.message}
+        </div>
+      )}
+      <div className="d-flex justify-content-center">
+        <button className="btn btn-danger" onClick={reset}>
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
 );
 
 export default Error;

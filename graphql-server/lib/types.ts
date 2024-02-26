@@ -80,7 +80,7 @@ export type Mutation = {
   createCategory: Category;
   createComment: Comment;
   createLike: Like;
-  createView: View;
+  createView: Scalars['Boolean']['output'];
   deleteBlog: Blog;
   deleteLike: Like;
   register: AuthResponse;
@@ -407,7 +407,7 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createCategory?: Resolver<ResolversTypes['Category'], ParentType, ContextType, RequireFields<MutationCreateCategoryArgs, 'name'>>;
   createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'blogId' | 'content' | 'userId'>>;
   createLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, RequireFields<MutationCreateLikeArgs, 'blogId' | 'userId'>>;
-  createView?: Resolver<ResolversTypes['View'], ParentType, ContextType, RequireFields<MutationCreateViewArgs, 'blogId' | 'userId'>>;
+  createView?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationCreateViewArgs, 'blogId' | 'userId'>>;
   deleteBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationDeleteBlogArgs, 'blogId'>>;
   deleteLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, RequireFields<MutationDeleteLikeArgs, 'blogId' | 'userId'>>;
   register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'username'>>;

@@ -24,11 +24,7 @@ mutation CreateComment($userId: ID!, $blogId: ID!, $content: String!) {
 
 export const CREATE_VIEW = gql(`
 mutation CreateView($userId: ID!, $blogId: ID!) {
-  createView(userId: $userId, blogId: $blogId) {
-    id
-    blogId
-    userId
-  }
+  createView(userId: $userId, blogId: $blogId)
 }
 `);
 
@@ -81,4 +77,3 @@ mutation DeleteBlog($blogId: ID!) {
   }
 }
 `);
-

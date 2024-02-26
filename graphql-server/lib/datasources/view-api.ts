@@ -1,5 +1,4 @@
 import type { PrismaClient } from "@prisma/client/scripts/default-index";
-import type { ViewModel } from "../models";
 
 export class ViewAPI {
   prisma: PrismaClient;
@@ -8,35 +7,23 @@ export class ViewAPI {
     this.prisma = prisma;
   }
 
-  // async createView(userId: number, blogId: number): Promise<ViewModel> {
-  //   return await this.prisma.view.create({
-  //     data: {
-  //       user: {
-  //         connect: {
-  //           id: userId,
-  //         },
-  //       },
-  //       blog: {
-  //         connect: {
-  //           id: blogId,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
-  // if the view already exists, don't create a new one
-  async createView(userId: number, blogId: number): Promise<ViewModel> {
-    return await this.prisma.view.upsert({
+  async createView(userId: number, blogId: number): Promise<boolean> {
+    // Check if a view already exists
+    const existingView = await this.prisma.view.findFirst({
       where: {
-        // Use the unique constraint name or fields
-        UniqueBlogUserView: {
-          userId: userId,
-          blogId: blogId,
-        },
+        userId: userId,
+        blogId: blogId,
       },
-      update: {},
-      create: {
+    });
+
+    // If a view exists, return false
+    if (existingView) {
+      return false;
+    }
+
+    // If no view exists, create a new view and return it
+    await this.prisma.view.create({
+      data: {
         user: {
           connect: {
             id: userId,
@@ -49,8 +36,8 @@ export class ViewAPI {
         },
       },
     });
-  }
-  
 
-  
+    return true;
+  }
+
 }

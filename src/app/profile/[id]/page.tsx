@@ -1,11 +1,13 @@
 import styles from "./page.module.css";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
-import UserBlogs from "./(blogs)/user-blogs";
+import UserBlogs from "@/src/app/ui/profile/user-blogs";
 
 export default withPageAuthRequired(
-  async function Profile({ params }: { params?: Record<string, string | string[]> }) {
-
-   
+  async function Page({
+    params,
+  }: {
+    params?: Record<string, string | string[]>;
+  }) {
     const { id } = params as { id: string };
 
     return (

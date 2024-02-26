@@ -1,11 +1,10 @@
 "use client";
-import { gql } from "@/graphql-client/__generated__/";
 import { useQuery, useMutation } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
 
 import { notFound } from "next/navigation";
-import { timeSince } from "@/src/app/lib/handle-time/time";
+import { timeSince } from "@/src/lib/handle-time/time";
 
 import React, { useState, useEffect } from "react";
 import { FaRegThumbsUp, FaRegEye } from "react-icons/fa";
@@ -14,16 +13,21 @@ import { BsThreeDots } from "react-icons/bs";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import {
+  CREATE_COMMENT,
+  CREATE_LIKE,
+  CREATE_VIEW,
+  UPDATE_BLOG_DESCRIPTION,
+  DELETE_LIKE,
+} from "@/src/requests/mutations";
+import { GET_BLOG } from "@/src/requests/queries";
+
 const BlogContent = ({
   blogId,
   userId,
-  styles,
 }: {
   blogId: string;
   userId: string;
-  styles: {
-    readonly [key: string]: string;
-  };
 }) => {
   const [newComment, setNewComment] = useState("");
   const [editDescriptionShow, setEditDescriptionShow] = useState(false);
@@ -31,7 +35,7 @@ const BlogContent = ({
   const [createComment] = useMutation(CREATE_COMMENT);
   const [updateBlogDescription] = useMutation(UPDATE_BLOG_DESCRIPTION);
 
-  const [createView] = useMutation(CREATE_VIEW, {
+  const [createView, { data: viewData }] = useMutation(CREATE_VIEW, {
     variables: {
       userId,
       blogId,
@@ -65,7 +69,17 @@ const BlogContent = ({
 
   useEffect(() => {
     createView();
-  }, [blogId, createView]);
+    if (viewData?.createView) {
+      client.cache.modify({
+        id: `Blog:${blogId}`,
+        fields: {
+          number_of_views(existingViews = 0) {
+            return existingViews + 1;
+          },
+        },
+      });
+    }
+  }, [blogId, client.cache, createView, viewData]);
 
   useEffect(() => {
     setNewDescription(blog?.getBlog?.description ?? "");

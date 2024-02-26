@@ -1,19 +1,11 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { gql } from "@/graphql-client/__generated__/";
 import { useQuery } from "@apollo/client";
 
 import { useState, useEffect } from "react";
+import { GET_CATEGORIES } from "@/src/requests/queries";
 
-export const GET_CATEGORIES = gql(`
-query GetCategories {
-  getCategories {
-    name
-  }
-
-}
-`);
 
 const SearchCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState(""); // State to track the selected category
