@@ -85,9 +85,6 @@ npm run dev
 Your server should now be running on [http://localhost:3000](http://localhost:3000).
 
 
-Certainly, here's the revised section with the specified URLs for accessing Prisma Studio and Apollo Server:
-
----
 
 ## Development Tools
 
