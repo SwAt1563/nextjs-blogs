@@ -84,6 +84,43 @@ npm run dev
 
 Your server should now be running on [http://localhost:3000](http://localhost:3000).
 
+
+Certainly, here's the revised section with the specified URLs for accessing Prisma Studio and Apollo Server:
+
+---
+
+## Development Tools
+
+### Prisma Studio
+
+Prisma Studio is a visual editor for your database, making it easy to manage your data models and records. To access Prisma Studio:
+
+1. Start Prisma Studio by running:
+
+   ```bash
+   npx prisma studio
+   ```
+
+2. After starting Prisma Studio, it will be accessible through your web browser at [http://localhost:5555/](http://localhost:5555/). Here, you can visually interact with your database.
+
+### Apollo Server Studio
+
+Apollo Server offers a powerful GraphQL API management platform, Apollo Studio, for schema exploration, query tracing, and performance insights. To access your Apollo Server's GraphQL playground:
+
+1. Make sure your Apollo Server is running. If it's not already, you can start your server by running:
+
+   ```bash
+   npm run dev
+   ```
+
+2. Once the server is up, visit [http://localhost:3000/api/graphql](http://localhost:3000/api/graphql) in your web browser. This URL serves as the entry point to your GraphQL API where you can test queries and mutations directly.
+
+Note: The URLs provided are based on default configurations and local development setup. If you've customized the port settings or paths in your project, adjust the URLs accordingly.
+
+---
+
+This approach simplifies the instructions for accessing these powerful development tools, making it straightforward for users to start managing their database with Prisma Studio and exploring their GraphQL API with Apollo Server.
+
 ## Usage
 
 - Navigate to the website, sign up or log in to start exploring.
