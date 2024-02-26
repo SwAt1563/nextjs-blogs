@@ -150,6 +150,7 @@ export type MutationUpdateBlogArgs = {
 
 export type MutationUpdateBlogStatusArgs = {
   blogId: Scalars['ID']['input'];
+  status: Status;
 };
 
 export type Query = {
@@ -159,6 +160,7 @@ export type Query = {
   getBlogsBySearchQuery?: Maybe<BlogPagination>;
   getBlogsByUser?: Maybe<Array<Blog>>;
   getCategories?: Maybe<Array<Category>>;
+  getStats: Stats;
   getTopBlogs?: Maybe<Array<Blog>>;
   getUser?: Maybe<User>;
   login: AuthResponse;
@@ -205,6 +207,13 @@ export enum Role {
   Admin = 'ADMIN',
   User = 'USER'
 }
+
+export type Stats = {
+  __typename?: 'Stats';
+  totalDraftBlogs: Scalars['Int']['output'];
+  totalPublishedBlogs: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+};
 
 export enum Status {
   Draft = 'DRAFT',
@@ -312,6 +321,7 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Role: Role;
+  Stats: ResolverTypeWrapper<Stats>;
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<UserModel>;
@@ -331,6 +341,7 @@ export type ResolversParentTypes = ResolversObject<{
   Like: LikeModel;
   Mutation: {};
   Query: {};
+  Stats: Stats;
   String: Scalars['String']['output'];
   User: UserModel;
   View: ViewModel;
@@ -401,7 +412,7 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   deleteLike?: Resolver<ResolversTypes['Like'], ParentType, ContextType, RequireFields<MutationDeleteLikeArgs, 'blogId' | 'userId'>>;
   register?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<MutationRegisterArgs, 'email' | 'username'>>;
   updateBlog?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogArgs, 'blogId'>>;
-  updateBlogStatus?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogStatusArgs, 'blogId'>>;
+  updateBlogStatus?: Resolver<ResolversTypes['Blog'], ParentType, ContextType, RequireFields<MutationUpdateBlogStatusArgs, 'blogId' | 'status'>>;
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
@@ -410,9 +421,17 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   getBlogsBySearchQuery?: Resolver<Maybe<ResolversTypes['BlogPagination']>, ParentType, ContextType, Partial<QueryGetBlogsBySearchQueryArgs>>;
   getBlogsByUser?: Resolver<Maybe<Array<ResolversTypes['Blog']>>, ParentType, ContextType, RequireFields<QueryGetBlogsByUserArgs, 'userId'>>;
   getCategories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  getStats?: Resolver<ResolversTypes['Stats'], ParentType, ContextType>;
   getTopBlogs?: Resolver<Maybe<Array<ResolversTypes['Blog']>>, ParentType, ContextType>;
   getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'userId'>>;
   login?: Resolver<ResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<QueryLoginArgs, 'username'>>;
+}>;
+
+export type StatsResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']> = ResolversObject<{
+  totalDraftBlogs?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalPublishedBlogs?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalUsers?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -441,6 +460,7 @@ export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Like?: LikeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Stats?: StatsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   View?: ViewResolvers<ContextType>;
 }>;

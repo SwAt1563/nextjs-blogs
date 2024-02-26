@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { notFound } from "next/navigation";
-import { timeSince } from "@/src/app/lib/handle-time/created-at";
+import { timeSince } from "@/src/app/lib/handle-time/time";
 
 import React, { useState, useEffect } from "react";
 import { FaRegThumbsUp, FaRegEye } from "react-icons/fa";
@@ -13,98 +13,6 @@ import { BsThreeDots } from "react-icons/bs";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
-export const GET_BLOG = gql(`
-query GetBlog($blogId: ID!, $userId: ID!) {
-  getBlog(blogId: $blogId, userId: $userId) {
-    id
-    title
-    description
-    createdAt
-    updatedAt
-    category {
-      name
-    }
-    imageUrl
-    user {
-      id
-      email
-      imageUrl
-      username
-    }
-    userMadeLike
-    number_of_views
-    number_of_likes
-    number_of_comments
-    comments {
-      content
-      createdAt
-      user {
-        id
-        username
-        imageUrl
-      }
-    }
-  }
-}
-`);
-
-export const CREATE_COMMENT = gql(`
-mutation CreateComment($userId: ID!, $blogId: ID!, $content: String!) {
-  createComment(userId: $userId, blogId: $blogId, content: $content) {
-    content
-    createdAt
-    user {
-      id
-      username
-      imageUrl
-    }
-  }
-}
-`);
-
-export const CREATE_VIEW = gql(`
-mutation CreateView($userId: ID!, $blogId: ID!) {
-  createView(userId: $userId, blogId: $blogId) {
-    id
-    blogId
-    userId
-  }
-}
-`);
-
-export const CREATE_LIKE = gql(`
-mutation CreateLike($userId: ID!, $blogId: ID!) {
-  createLike(userId: $userId, blogId: $blogId) {
-    id
-    blogId
-    userId
-  }
-}
-`);
-
-export const DELETE_LIKE = gql(`
-mutation DeleteLike($userId: ID!, $blogId: ID!) {
-  deleteLike(userId: $userId, blogId: $blogId) {
-    id
-    blogId
-    userId
-  }
-}
-`);
-
-export const UPDATE_BLOG_DESCRIPTION = gql(`
-mutation UpdateBlog($blogId: ID!, $title: String, $description: String, $imageUrl: String) {
-  updateBlog(blogId: $blogId, title: $title, description: $description, imageUrl: $imageUrl) {
-    id
-    title
-    description
-    imageUrl
-    updatedAt
-    createdAt
-  }
-}
-`);
 
 const BlogContent = ({
   blogId,
@@ -157,7 +65,7 @@ const BlogContent = ({
 
   useEffect(() => {
     createView();
-  }, [blogId]);
+  }, [blogId, createView]);
 
   useEffect(() => {
     setNewDescription(blog?.getBlog?.description ?? "");

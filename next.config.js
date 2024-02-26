@@ -6,6 +6,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "t3.ftcdn.net",
       "blog1563-website-images.s3.amazonaws.com",
+      "www.hallaminternet.com",
     ],
   },
 };

@@ -1,5 +1,4 @@
 "use client";
-import { gql } from "@/graphql-client/__generated__/";
 import { useQuery } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,38 +6,8 @@ import Link from "next/link";
 import { Card, Button, ListGroup } from "react-bootstrap";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { notFound } from "next/navigation";
-import { timeSince } from "@/src/app/lib/handle-time/created-at";
+import { timeSince } from "@/src/app/lib/handle-time/time";
 
-export const GET_USER_BLOGS = gql(`
-query GetBlogsByUser($userId: ID!) {
-  getBlogsByUser(userId: $userId) {
-    id
-    title
-    description
-    imageUrl
-    status
-    createdAt
-    category {
-      name
-    }
-    number_of_likes
-    number_of_views
-    number_of_comments
-  }
-}
-`);
-
-export const GET_USER = gql(`
-query GetUser($userId: ID!) {
-  getUser(userId: $userId) {
-    id
-    username
-    email
-    role
-    imageUrl
-  }
-}
-`);
 
 const UserBlogs = ({
   userId,

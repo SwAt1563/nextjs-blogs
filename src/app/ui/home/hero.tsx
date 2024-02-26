@@ -1,36 +1,13 @@
 "use client";
-import { gql } from "@/graphql-client/__generated__/";
 import { useQuery } from "@apollo/client";
-import { timeSince } from "@/src/app/lib/handle-time/created-at";
+import { timeSince } from "@/src/app/lib/handle-time/time";
 import { Carousel, Row, Col } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 
+import { GET_TOP_BLOGS } from "@/src/app/requests/queries";
 
-export const GET_TOP_BLOGS = gql(`
-query GetTopBlogs{
-  getTopBlogs{
-      id
-      title
-      description
-      imageUrl
-      createdAt
-      user {
-        username
-        email
-        id
-        imageUrl
-      }
-      category {
-        name
-      }
-      number_of_likes
-      number_of_views
-      number_of_comments
-    
-  }
-}
-`);
+
 
 const Hero = () => {
   const { data: blogs, loading, error } = useQuery(GET_TOP_BLOGS);

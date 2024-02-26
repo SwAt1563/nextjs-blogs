@@ -2,6 +2,7 @@ import { Resolvers } from "../types";
 
 export const blogResolvers: Resolvers = {
   Query: {
+    
     getBlog: async (_, { blogId, userId }, { dataSources }) => {
       return await dataSources.blogAPI.getBlog(Number(blogId), Number(userId));
     },
@@ -78,7 +79,7 @@ export const blogResolvers: Resolvers = {
         title,
         description,
         imageUrl ||
-          "https://www.hallaminternet.com/wp-content/uploads/2020/01/Is-blogging-relevant-anymore.jpeg"
+          "https://blog1563-website-images.s3.amazonaws.com/blog/test_blog-637d9f30-a771-4530-ba5f-7142c9d2744f.png"
       );
     },
 
@@ -86,8 +87,8 @@ export const blogResolvers: Resolvers = {
       return await dataSources.blogAPI.deleteBlog(Number(blogId));
     },
 
-    updateBlogStatus: async (_, { blogId }, { dataSources }) => {
-      return await dataSources.blogAPI.updateBlogStatus(Number(blogId));
+    updateBlogStatus: async (_, { blogId, status }, { dataSources }) => {
+      return await dataSources.blogAPI.updateBlogStatus(Number(blogId), status);
     },
 
     updateBlog: async (
@@ -105,8 +106,6 @@ export const blogResolvers: Resolvers = {
   },
 
   Blog: {
-   
-
     comments: async ({ id }, _, { dataSources }) => {
       return await dataSources.commentAPI.getBlogComments(Number(id));
     },

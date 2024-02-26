@@ -1,5 +1,4 @@
 "use client";
-import { gql } from "@/graphql-client/__generated__/";
 import { useQuery } from "@apollo/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,30 +9,6 @@ import { AiFillLike, AiFillEye, AiOutlineComment } from "react-icons/ai";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-export const GET_HOME_BLOGS = gql(`
-query GetBlogsBySearchQuery($query: String, $categoryName: String, $limit: Int, $offset: Int) {
-  getBlogsBySearchQuery(query: $query, categoryName: $categoryName, limit: $limit, offset: $offset) {
-    total
-    blogs {
-      id
-      title
-      imageUrl
-      createdAt
-      user {
-        username
-        id
-        imageUrl
-      }
-      category {
-        name
-      }
-      number_of_likes
-      number_of_views
-      number_of_comments
-    }
-  }
-}
-`);
 
 const Blogs = () => {
   const searchParams = useSearchParams();
@@ -68,7 +43,7 @@ const Blogs = () => {
   };
 
   // Check if there are more tracks to load
-  const hasMoreTracks =
+  const hadMoreBlogs =
     blogs?.getBlogsBySearchQuery?.blogs?.length !== undefined &&
     blogs.getBlogsBySearchQuery.blogs.length <
       blogs.getBlogsBySearchQuery.total;
@@ -113,7 +88,7 @@ const Blogs = () => {
                           alt={blog.title}
                           width={200}
                           height={200}
-                          className="img-fluid rounded-top-3 w-100"
+                          className="rounded-top-3 w-100"
                         />
 
                         {/* Small Image Overlay */}
@@ -171,7 +146,7 @@ const Blogs = () => {
               )}
             </div>
             <div className="text-center mb-3">
-              {hasMoreTracks && (
+              {hadMoreBlogs && (
                 <button
                   className="btn btn-info text-light"
                   onClick={handleLoadMore}

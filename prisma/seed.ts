@@ -2,12 +2,8 @@
 
 import { PrismaClient } from "@prisma/client";
 
-import { generateUsers } from "../data/users";
-import { blogs } from "../data/blogs";
-import { categories } from "../data/categories";
-import { comments } from "../data/comments";
-import { views } from "../data/views";
-import { likes } from "../data/likes";
+
+import {generateUsers, blogs, categories, comments, views, likes } from "./data";
 
 const prisma = new PrismaClient();
 

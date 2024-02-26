@@ -6,8 +6,10 @@ import BootstrapClient from "@/src/components/BootstrapClient";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 
-import Header from "@/src/app/ui/header/header";
 import Footer from "@/src/app/ui/footer/footer";
+import Header from "@/src/app/ui/header/header";
+
+
 
 export const metadata: Metadata = {
   title: {
@@ -24,6 +26,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  
+
   return (
     <html lang="en">
       <body className="">

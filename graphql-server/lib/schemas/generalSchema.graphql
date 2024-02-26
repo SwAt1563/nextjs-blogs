@@ -1,0 +1,9 @@
+type Stats {
+  totalUsers: Int!
+  totalPublishedBlogs: Int!
+  totalDraftBlogs: Int!
+}
+
+type Query {
+  getStats: Stats!
+}

@@ -48,7 +48,7 @@ generator client {
 
 }
 
-// accelerate for cache
+// accelerate for cache: example getCategories
 // https://console.prisma.io/clqnr07nh01r3yl0u3jx6w2hv/overview
 // https://www.prisma.io/docs/accelerate/getting-started
 // get the key and add it to the .env file

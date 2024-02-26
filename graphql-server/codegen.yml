@@ -7,6 +7,7 @@
 
 overwrite: true
 schema: "./graphql-server/lib/schemas/*.graphql" # start path from root
+# schema: "./graphql-server/lib/schemas/schema.graphql" # when generate one file using schema.ts
 documents: null
 generates:
   ./graphql-server/lib/types.ts:

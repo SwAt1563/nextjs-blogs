@@ -1,47 +1,16 @@
 // https://auth0.github.io/nextjs-auth0/types/config.ConfigParameters.html
 import { handleAuth, handleLogout, handleCallback } from "@auth0/nextjs-auth0";
-import { redirect } from "next/navigation";
 
-import { GraphQLClient, gql } from "graphql-request";
+import { GraphQLClient } from "graphql-request";
 
 import type {
   RegisterMutation,
   LoginQuery,
 } from "@/graphql-client/__generated__/graphql";
 
-export const LOGIN = gql`
-  query Login($username: String!) {
-    login(username: $username) {
-      code
-      success
-      message
-      user {
-        id
-        username
-        email
-        role
-        imageUrl
-      }
-    }
-  }
-`;
 
-export const REGISTER = gql`
-  mutation Register($username: String!, $email: String!, $imageUrl: String) {
-    register(username: $username, email: $email, imageUrl: $imageUrl) {
-      code
-      success
-      message
-      user {
-        imageUrl
-        email
-        username
-        id
-        role
-      }
-    }
-  }
-`;
+
+
 
 const afterCallback = async (req: any, session: any, state: any) => {
   const graphQLClient = new GraphQLClient(process.env.GRAPHQL_URL as string);

@@ -13,6 +13,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nquery GetBlogs($offset: Int, $limit: Int, $categoryName: String, $status: Status) {\n  getBlogs(offset: $offset, limit: $limit, categoryName: $categoryName, status: $status) {\n    total\n    blogs {\n      id\n      title\n      imageUrl\n      user {\n        id\n        username\n        email\n        imageUrl\n      }\n      status\n      createdAt\n      category {\n        name\n      }\n    }\n  }\n}\n": types.GetBlogsDocument,
+    "\nquery GetCategories {\n  getCategories {\n    name\n  }\n}\n": types.GetCategoriesDocument,
+    "\nquery GetStats {\n  getStats {\n    totalUsers\n    totalPublishedBlogs\n    totalDraftBlogs\n  }\n}\n": types.GetStatsDocument,
+    "\nmutation UpdateBlogStatus($blogId: ID!, $status: Status!) {\n  updateBlogStatus(blogId: $blogId, status: $status) {\n    id\n  }\n}\n": types.UpdateBlogStatusDocument,
+    "\n\nmutation DeleteBlog($blogId: ID!) {\n  deleteBlog(blogId: $blogId) {\n    id\n  }\n}\n": types.DeleteBlogDocument,
     "\n  query Login($username: String!) {\n    login(username: $username) {\n      code\n      success\n      message\n      user {\n        id\n        username\n        email\n        role\n        imageUrl\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $email: String!, $imageUrl: String) {\n    register(username: $username, email: $email, imageUrl: $imageUrl) {\n      code\n      success\n      message\n      user {\n        imageUrl\n        email\n        username\n        id\n        role\n      }\n    }\n  }\n": types.RegisterDocument,
     "\nquery GetBlog($blogId: ID!, $userId: ID!) {\n  getBlog(blogId: $blogId, userId: $userId) {\n    id\n    title\n    description\n    createdAt\n    updatedAt\n    category {\n      name\n    }\n    imageUrl\n    user {\n      id\n      email\n      imageUrl\n      username\n    }\n    userMadeLike\n    number_of_views\n    number_of_likes\n    number_of_comments\n    comments {\n      content\n      createdAt\n      user {\n        id\n        username\n        imageUrl\n      }\n    }\n  }\n}\n": types.GetBlogDocument,
@@ -43,6 +48,26 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetBlogs($offset: Int, $limit: Int, $categoryName: String, $status: Status) {\n  getBlogs(offset: $offset, limit: $limit, categoryName: $categoryName, status: $status) {\n    total\n    blogs {\n      id\n      title\n      imageUrl\n      user {\n        id\n        username\n        email\n        imageUrl\n      }\n      status\n      createdAt\n      category {\n        name\n      }\n    }\n  }\n}\n"): (typeof documents)["\nquery GetBlogs($offset: Int, $limit: Int, $categoryName: String, $status: Status) {\n  getBlogs(offset: $offset, limit: $limit, categoryName: $categoryName, status: $status) {\n    total\n    blogs {\n      id\n      title\n      imageUrl\n      user {\n        id\n        username\n        email\n        imageUrl\n      }\n      status\n      createdAt\n      category {\n        name\n      }\n    }\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetCategories {\n  getCategories {\n    name\n  }\n}\n"): (typeof documents)["\nquery GetCategories {\n  getCategories {\n    name\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetStats {\n  getStats {\n    totalUsers\n    totalPublishedBlogs\n    totalDraftBlogs\n  }\n}\n"): (typeof documents)["\nquery GetStats {\n  getStats {\n    totalUsers\n    totalPublishedBlogs\n    totalDraftBlogs\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nmutation UpdateBlogStatus($blogId: ID!, $status: Status!) {\n  updateBlogStatus(blogId: $blogId, status: $status) {\n    id\n  }\n}\n"): (typeof documents)["\nmutation UpdateBlogStatus($blogId: ID!, $status: Status!) {\n  updateBlogStatus(blogId: $blogId, status: $status) {\n    id\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n\nmutation DeleteBlog($blogId: ID!) {\n  deleteBlog(blogId: $blogId) {\n    id\n  }\n}\n"): (typeof documents)["\n\nmutation DeleteBlog($blogId: ID!) {\n  deleteBlog(blogId: $blogId) {\n    id\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

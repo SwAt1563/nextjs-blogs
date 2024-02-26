@@ -8,6 +8,22 @@ export class BlogAPI {
     this.prisma = prisma;
   }
 
+  async countBlogsByStatus(): Promise<{ published: number; drafts: number }> {
+    const published = await this.prisma.blog.count({
+      where: {
+        status: "PUBLISHED",
+      },
+    });
+
+    const drafts = await this.prisma.blog.count({
+      where: {
+        status: "DRAFT",
+      },
+    });
+
+    return { published, drafts };
+  }
+
   async createBlog(
     userId: number,
     categoryName: string,
@@ -45,13 +61,13 @@ export class BlogAPI {
     });
   }
 
-  async updateBlogStatus(blogId: number): Promise<BlogModel> {
+  async updateBlogStatus(blogId: number, status: Status): Promise<BlogModel> {
     return await this.prisma.blog.update({
       where: {
         id: blogId,
       },
       data: {
-        status: "PUBLISHED",
+        status,
       },
     });
   }

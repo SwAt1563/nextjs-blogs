@@ -18,6 +18,9 @@ const typesArray = loadFilesSync(join(currentDir, "schemas"), {
 
 const typeDefs = mergeTypeDefs(typesArray);
 
+
+// for write all schema in one file
+
 // // Specify the path for the output .graphql file
 // const outputPath = join(currentDir, "schema.graphql");
 

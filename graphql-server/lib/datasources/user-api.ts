@@ -8,6 +8,10 @@ export class UserAPI {
     this.prisma = prisma;
   }
 
+  async countUsers(): Promise<number> {
+    return await this.prisma.user.count();
+  }
+
   async createUser(
     username: string,
     email: string,

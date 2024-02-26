@@ -24,7 +24,9 @@ type BlogPagination {
   total: Int!
 }
 
+
 type Query {
+
   getBlog(blogId: ID!, userId: ID!): Blog
   getBlogsByUser(userId: ID!): [Blog!]
   getTopBlogs: [Blog!]
@@ -40,6 +42,7 @@ type Query {
     limit: Int
     offset: Int
   ): BlogPagination
+
 }
 
 type Mutation {
@@ -57,5 +60,5 @@ type Mutation {
     description: String
     imageUrl: String
   ): Blog!
-  updateBlogStatus(blogId: ID!): Blog!
+  updateBlogStatus(blogId: ID!, status: Status!): Blog!
 }
