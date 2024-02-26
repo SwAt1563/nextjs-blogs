@@ -26,6 +26,7 @@ Welcome to the GitHub repository of Blogs, a dynamic and feature-rich blogging p
 - **Intelligent Caching Strategies**: With both Accelerate Prisma and Apollo Client Cache, the platform ensures data is efficiently cached, minimizing database and backend hits and speeding up query response times for a seamless user experience.
 - **Responsive Design**: Bootstrap for a mobile-friendly and responsive design.
 - **Optimized Loading**: Skeleton screens to improve the perceived loading time of pages.
+- **Data Integrity**: Employs Zod for data validation, ensuring that only valid data is processed and stored.
 
 ## Getting Started
 
