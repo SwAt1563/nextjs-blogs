@@ -2,7 +2,7 @@
 
 Welcome to the GitHub repository of Blogs, a dynamic and feature-rich blogging platform designed to offer an intuitive, efficient, and engaging user experience. Built with modern technologies, this platform aims to provide a seamless interface for users to create, share, and discover content. Below, you'll find an overview of the technologies used, setup instructions, and other relevant information about the project.
 
-## Technologies Used
+## Technologies 
 
 - **Framework**: Next.js 14
 - **Database**: PostgreSQL hosted on Vercel
