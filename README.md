@@ -3,7 +3,10 @@
 Welcome to the GitHub repository of Blogs, a dynamic and feature-rich blogging platform designed to offer an intuitive, efficient, and engaging user experience. Built with modern technologies, this platform aims to provide a seamless interface for users to create, share, and discover content. Below, you'll find an overview of the technologies used, setup instructions, and other relevant information about the project.
 
 
-https://github.com/SwAt1563/nextjs-blogs/assets/79475839/95eb8403-2f59-49ac-bdd1-26496a8d13c5
+
+
+https://github.com/SwAt1563/nextjs-blogs/assets/79475839/a494967c-86a1-4eea-b1dd-1fdf25e510be
+
 
 
 ## Technologies 
